@@ -6,6 +6,7 @@
     state: present
   loop:
     - xNetworking
+    - SqlServerDsc
 
 - name: set up sqladmin user
   win_user:
@@ -89,13 +90,23 @@
     image_path: "{{ iso_path }}"
     state: absent
 
-- name: copy script file
-  win_copy:
-    src: enableSQLTCP.ps1
-    dest: c:\enableSQLTCP.ps1
-
 - name: enable tcp on SQL server instance
-  win_shell: c:\enableSQLTCP.ps1
+  win_dsc:
+    resource_name: SqlServerNetwork
+    InstanceName: MSSQLSERVER
+    ProtocolName: Tcp
+    TCPPort: 1433
+    TCPDynamicPort: False
+    IsEnabled: True
+    RestartService: True
+
+#- name: copy script file
+#  win_copy:
+#    src: enableSQLTCP.ps1
+#    dest: c:\enableSQLTCP.ps1
+#
+#- name: enable tcp on SQL server instance
+#  win_shell: c:\enableSQLTCP.ps1
 
 - name: Open port for MSSQL
   win_dsc:
@@ -108,8 +119,8 @@
     direction: Inbound
     protocol: TCP
 
-- name: restart SQL Server instance
-  win_service:
-    name: MSSQLSERVER
-    state: restarted
-    force_dependent_services: yes
+#- name: restart SQL Server instance
+#  win_service:
+#    name: MSSQLSERVER
+#    state: restarted
+#    force_dependent_services: yes
