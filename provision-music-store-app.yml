@@ -16,7 +16,7 @@
   roles:
     - sql2016
 
-- name: install web app
+- name: install music store app
   hosts: '*iis'
   vars:
     ansible_port: 5986
@@ -29,5 +29,5 @@
         sql_server_ip_address: "{{ hostvars['sql_server']['ip_address'] }}"
       when:
         - hostvars['sql_server']['ip_address'] is defined
-  role:
+  roles:
     - music-store-iis
