@@ -106,6 +106,13 @@
     direction: Inbound
     protocol: TCP
 
+- name: Ensure iis service is running
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: Running
+    startuptype: Automatic
+
 - name: Create IIS Website
   win_dsc:
     resource_name: xWebsite
