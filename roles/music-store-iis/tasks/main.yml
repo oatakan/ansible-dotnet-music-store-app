@@ -44,7 +44,7 @@
     PhysicalPath: "{{ iis_site.path }}"
     BindingInfo:
     - Protocol: http
-      Port: "{{ iis_site.port | int }}"
+      Port: 80
       IPAddress: '*'
   notify:
     - stop iis service
