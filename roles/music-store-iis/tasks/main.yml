@@ -14,14 +14,18 @@
     resource_name: cChocoInstaller
     InstallDir: 'c:\choco'
 
-- name: Install prereq packages
+- name: Install dotnetcore-sdk
   win_dsc:
     resource_name: cChocoPackageInstaller
     Name: "{{ item }}"
     Ensure: Present
-  loop:
-    - dotnetcore-sdk
-    - dotnetcore-windowshosting
+    Version: 1.1.2
+
+- name: Install dotnetcore-windowshosting
+  win_dsc:
+    resource_name: cChocoPackageInstaller
+    Name: dotnetcore-windowshosting
+    Ensure: Present
 
 - name: Install IIS
   win_dsc:
