@@ -44,10 +44,6 @@
         from_port: 80
         to_port: 80
         cidr_ip: 0.0.0.0/0
-      - proto: tcp
-        from_port: 443
-        to_port: 443
-        cidr_ip: 0.0.0.0/0
     rules_egress:
       - proto: all
         cidr_ip: 0.0.0.0/0
@@ -73,13 +69,9 @@
       - protocol: tcp
         load_balancer_port: 80
         instance_port: 80
-      - protocol: tcp
-        load_balancer_port: 443
-        instance_port: 443
-        #ssl_certificate_id: "{{ ec2_cert_id }}"
     health_check:
       ping_protocol: tcp # options are http, https, ssl, tcp
-      ping_port: 443
+      ping_port: 80
       response_timeout: 5 # seconds
       interval: 10 # seconds
       unhealthy_threshold: 2
