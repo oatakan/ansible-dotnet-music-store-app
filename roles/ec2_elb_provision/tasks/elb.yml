@@ -35,7 +35,7 @@
 
 - name: ceate ec2 security groups
   ec2_group:
-    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+    name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-sg"
     description: allow http and https
     region: "{{ instance_ids[0].region }}"
     vpc_id: "{{ instance_ids[0].vpc_id }}"
@@ -48,7 +48,7 @@
       - proto: all
         cidr_ip: 0.0.0.0/0
     tags:
-      name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+      name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-sg"
       role: "{{ role_name }}"
       app: "{{ app_name }}"
   delegate_to: 127.0.0.1
@@ -56,12 +56,12 @@
 
 - name: provision a new ec2 elb lb
   ec2_elb_lb:
-    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+    name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
     state: present
     region: "{{ instance_ids[0].region }}"
     instance_ids: "{{ instance_ids | map(attribute='id') | unique | list }}"
     security_group_names:
-      - "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+      - "{{ ec2_name_prefix }}-{{ subdomain }}-elb-sg"
     subnets: "{{ instance_ids | map(attribute='subnet_id') | unique | list }}"
     purge_instance_ids: true
     cross_az_load_balancing: yes
@@ -77,7 +77,7 @@
       unhealthy_threshold: 2
       healthy_threshold: 2
     tags:
-      name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+      name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
       role: "{{ role_name }}"
       app: "{{ app_name }}"
   register: elb_lb
@@ -89,7 +89,7 @@
     state: present
     overwrite: yes
     zone: "{{ hosted_zone_domain_name }}"
-    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    record: "musicstore.{{ subdomain }}.{{ hosted_zone_domain_name }}"
     type: A
     value: "{{ elb_lb.elb.dns_name }}"
     alias: True
@@ -99,5 +99,5 @@
 
 - name: output url
   debug:
-    msg: "application is available at https://{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}/"
+    msg: "application is available at http://musicstore.{{ subdomain }}.{{ hosted_zone_domain_name }}/"
   run_once: yes

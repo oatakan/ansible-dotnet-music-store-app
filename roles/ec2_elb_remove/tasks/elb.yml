@@ -12,7 +12,7 @@
   route53:
     command: get
     zone: "{{ hosted_zone_domain_name }}"
-    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    record: "musicstore.{{ subdomain }}.{{ hosted_zone_domain_name }}"
     type: A
   register: routerelbrec
   when: hosted_zone_domain_name is defined and ec2_name_prefix is defined
@@ -23,7 +23,7 @@
   route53:
     state: absent
     zone: "{{ hosted_zone_domain_name }}"
-    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    record: "musicstore.{{ subdomain }}.{{ hosted_zone_domain_name }}"
     type: A
     value: "{{ routerelbrec.set.value }}"
     alias: True
@@ -34,7 +34,7 @@
 
 - name: remove ec2 elb lb
   ec2_elb_lb:
-    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+    name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
     state: absent
     region: "{{ current_ec2_region }}"
     wait: yes
@@ -44,7 +44,7 @@
 
 - name: remove ec2 security group
   ec2_group:
-    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+    name: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-sg"
     description: allow http and https
     region: "{{ current_ec2_region }}"
     state: absent
