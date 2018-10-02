@@ -23,3 +23,25 @@ nodes:
         volume_size: 50
         delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
+  - name: winweb2
+    role: iis
+    app_name: music_store_demo
+    instance_type: t2.large
+    image: ami-603b1c1a #windows 2016
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 50
+        delete_on_termination: true
+    user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
+  - name: winweb3
+    role: iis
+    app_name: music_store_demo
+    instance_type: t2.large
+    image: ami-603b1c1a #windows 2016
+    volumes:
+      - device_name: /dev/xvda
+        volume_type: gp2
+        volume_size: 50
+        delete_on_termination: true
+    user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
