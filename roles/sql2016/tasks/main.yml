@@ -100,14 +100,6 @@
     IsEnabled: True
     RestartService: True
 
-#- name: copy script file
-#  win_copy:
-#    src: enableSQLTCP.ps1
-#    dest: c:\enableSQLTCP.ps1
-#
-#- name: enable tcp on SQL server instance
-#  win_shell: c:\enableSQLTCP.ps1
-
 - name: Open port for MSSQL
   win_dsc:
     resource_name: xFirewall
@@ -118,9 +110,3 @@
     action: Allow
     direction: Inbound
     protocol: TCP
-
-#- name: restart SQL Server instance
-#  win_service:
-#    name: MSSQLSERVER
-#    state: restarted
-#    force_dependent_services: yes
