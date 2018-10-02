@@ -106,34 +106,6 @@
     direction: Inbound
     protocol: TCP
 
-- name: Ensure iis service is running
-  win_dsc:
-    resource_name: service
-    name: W3Svc
-    state: Running
-    startuptype: Automatic
-
-- name: Create IIS Website
-  win_dsc:
-    resource_name: xWebsite
-    Ensure: Present
-    Name: "{{ iis_site.name }}"
-    State: Started
-    PhysicalPath: "{{ iis_site.path }}"
-    BindingInfo:
-    - Protocol: http
-      Port: 80
-      IPAddress: '*'
-
-- name: Create Web Application
-  win_dsc:
-    resource_name: xWebApplication
-    Website: "{{ iis_site.name }}"
-    Name: "{{ iis_site.name }}Application"
-    Ensure: Present
-    WebAppPool: DefaultAppPool
-    PhysicalPath: "{{ iis_site.path }}"
-
 - name: ensure iis service is stopped
   win_dsc:
     resource_name: service
