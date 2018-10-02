@@ -45,7 +45,7 @@
     Ensure: Absent
     Name: "Default Web Site"
 
-- name: start iis service
+- name: ensure iis service is running
   win_dsc:
     resource_name: service
     name: W3Svc
@@ -79,7 +79,7 @@
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
 
-- name: stop iis service
+- name: ensure iis service is stopped
   win_dsc:
     resource_name: service
     name: W3Svc
@@ -106,7 +106,7 @@
     direction: Inbound
     protocol: TCP
 
-- name: start iis service
+- name: ensure iis service is running
   win_dsc:
     resource_name: service
     name: W3Svc
