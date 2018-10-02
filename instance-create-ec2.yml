@@ -1,0 +1,12 @@
+- name: Deploy Windows Servers on ec2
+  hosts: all
+  gather_facts: False
+  connection: local
+  become: no
+  vars:
+    ansible_port: 5986
+  vars_files:
+    - node-config/nodes-ec2.yml
+
+  roles:
+  - ansible-role-ec2

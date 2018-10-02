@@ -1,0 +1,4 @@
+iis_sites:
+  - name: MusicStore
+    port: 80
+    path: C:\sites\musicstore

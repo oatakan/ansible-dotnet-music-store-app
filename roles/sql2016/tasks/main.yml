@@ -1,0 +1,95 @@
+# Install SQL 2016
+
+- name: set up sqladmin user
+  win_user:
+    name: "{{ mssql_username }}"
+    password: "{{ mssql_password }}"
+    password_never_expires: True
+    state: present
+    groups:
+      - Administrators
+
+- name: install .Net
+  win_feature:
+    name: "{{ item }}"
+    state: present
+    include_sub_features: True
+    include_management_tools: True
+  with_items:
+    - NET-Framework-Core
+    - NET-Framework-Features
+  register: install_dotnet
+  until: install_dotnet is success
+  delay: 3
+  retries: 5
+
+- name: create directory structure
+  win_file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - C:\Backup
+    - C:\Databases
+    - C:\UserDatabases
+
+- name: check ISO file
+  win_stat:
+    path: "{{ iso_path }}"
+  register: iso_file
+  when: (":" in iso_path)
+
+- name: download ISO file
+  win_get_url:
+    dest: "{{ iso_path }}"
+    url: "{{ iso_url }}"
+  register: download_iso
+  until: download_iso is success
+  delay: 3
+  retries: 5
+  when: (":" in iso_path) and (not iso_file.stat.exists)
+
+- name: mount iso
+  win_disk_image:
+    image_path: "{{ iso_path }}"
+    state: present
+  register: disk_image_out
+
+- name: install SQL 2016
+  win_package:
+    path: '{{ disk_image_out.mount_path }}setup.exe'
+    product_id: '{0AE831BC-F2A8-4DE2-8FBF-68B220611A7F}'
+    arguments:
+      - /Q
+      - /ACTION=Install
+      - /IACCEPTSQLSERVERLICENSETERMS
+      - /ENU
+      - /UPDATEENABLED=false
+      - /FEATURES=SQLENGINE,Conn
+      - /INSTANCENAME=MSSQLSERVER
+      - /SECURITYMODE=SQL
+      - /SAPWD={{ mssql_password }}
+      - /AGTSVCSTARTUPTYPE=automatic
+      - /BROWSERSVCSTARTUPTYPE=automatic
+      - /SQLSYSADMINACCOUNTS={{ mssql_username }}
+      - /SQLBACKUPDIR=C:\Backup
+      - /SQLUSERDBDIR=C:\Databases
+      - /SQLUSERDBLOGDIR=C:\UserDatabases
+
+- name: unmount iso
+  win_disk_image:
+    image_path: "{{ iso_path }}"
+    state: absent
+
+- name: copy script file
+  win_copy:
+    src: enableSQLTCP.ps1
+    dest: c:\enableSQLTCP.ps1
+
+- name: enable tcp on SQL server instance
+  win_shell: c:\enableSQLTCP.ps1
+
+- name: restart SQL Server instance
+  win_service:
+    name: MSSQLSERVER
+    state: restarted
+    force_dependent_services: yes

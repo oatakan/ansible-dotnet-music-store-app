@@ -1,0 +1,32 @@
+- name: install sql server
+  hosts: '*sql_server'
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+  pre_tasks:
+    - name: set ad server ip
+      add_host:
+        name: sql_server
+        ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
+
+    - debug:
+        var: hostvars['sql_server']['ip_address']
+  roles:
+    - sql2016
+
+- name: install web app
+  hosts: '*iis'
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+  pre_tasks:
+    - name: set ip address of sql server
+      set_fact:
+        sql_server_ip_address: "{{ hostvars['sql_server']['ip_address'] }}"
+      when:
+        - "'sql_server' in play_hosts"
+        - hostvars['sql_server']['ip_address'] is defined
