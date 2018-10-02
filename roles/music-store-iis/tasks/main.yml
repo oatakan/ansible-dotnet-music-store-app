@@ -75,9 +75,11 @@
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
 
-- name: Stop service
-  win_shell: Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -PassThru -Force
-  ignore_errors: yes
+- name: stop iis service
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: stopped
 
 - name: Unzip application files
   win_unzip:
@@ -88,10 +90,6 @@
   win_template:
     src: config.json.j2
     dest: '{{ iis_site.path }}\config.json'
-
-#- name: Start service
-#  win_shell: Start-Process 'C:\Program Files\dotnet\dotnet.exe' -ArgumentList '{{ iis_site.path }}\MusicStore.dll'
-#  ignore_errors: yes
 
 - name: Open port for site on the firewall
   win_dsc:
