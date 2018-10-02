@@ -6,7 +6,8 @@
     ansible_winrm_transport: credssp
     ansible_winrm_server_cert_validation: ignore
   roles:
-    - ec2_elb_remove
+    - role: ec2_elb_remove
+      ignore_errors: yes
 
 - name: Remove Windows instances
   hosts: localhost
