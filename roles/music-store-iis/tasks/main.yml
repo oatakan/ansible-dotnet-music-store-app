@@ -26,9 +26,6 @@
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
-  loop:
-    - 1
-    - 2
 
 - name: Install IIS
   win_dsc:
@@ -108,6 +105,12 @@
     action: Allow
     direction: Inbound
     protocol: TCP
+
+- name: ensure iis service is stopped
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: stopped
 
 - name: ensure iis service is running
   win_dsc:
