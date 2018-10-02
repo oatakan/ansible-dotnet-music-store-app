@@ -8,7 +8,6 @@
     - xWebAdministration
     - xNetworking
     - cChoco
-    - Pscx
 
 - name: Install Chocolatey
   win_dsc:
@@ -76,8 +75,6 @@
   win_unzip:
     src: '{{ ansible_env.TEMP }}\app.zip'
     dest: '{{ iis_site.path }}'
-    recurse: yes
-    delete_archive: no
 
 - name: Create config.json file
   win_template:
