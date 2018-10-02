@@ -36,6 +36,7 @@
     - name: de-register instance from load balancer
       local_action:
         module: ec2_elb
+        region: "{{ ec2_region }}"
         ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
         instance_id: "{{ ec2_id }}"
         state: absent
@@ -52,6 +53,7 @@
     - name: register instance with load balancer
       local_action:
         module: ec2_elb
+        region: "{{ ec2_region }}"
         ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
         instance_id: "{{ ec2_id }}"
         state: present
