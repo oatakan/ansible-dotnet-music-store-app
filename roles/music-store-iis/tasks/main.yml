@@ -56,9 +56,6 @@
     - Protocol: http
       Port: 80
       IPAddress: '*'
-  notify:
-    - stop iis service
-    - start iis service
 
 - name: Create Web Application
   win_dsc:
@@ -101,12 +98,13 @@
     action: Allow
     direction: Inbound
     protocol: TCP
-  notify:
-    - stop iis service
-    - start iis service
 
-- name: flush handlers
-  meta: flush_handlers
+- name: start iis service
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: Running
+    startuptype: Automatic
 
 - name: proper response from iis is received
   win_uri:
