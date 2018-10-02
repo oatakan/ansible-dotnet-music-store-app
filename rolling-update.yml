@@ -1,25 +1,4 @@
-- hosts: tag_role_webservers:&tag_app_rolling_app
-  become: yes
-  become_user: root
-  serial: "50%"
-
-  pre_tasks:
-  - name: disable the server in haproxy
-    command: echo "disable server habackend/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
-    delegate_to: "{{ item }}"
-    with_items: "{{ groups.tag_role_lbservers }}"
-
-  roles:
-  - geerlingguy.nginx
-
-  post_tasks:
-  - name: enable the server in haproxy
-    command: echo "enable server habackend/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
-    delegate_to: "{{ item }}"
-    with_items: "{{ groups.tag_role_lbservers }}"
-
-
-
+---
 
 - name: get sql server details
   hosts: '*sql_server'
