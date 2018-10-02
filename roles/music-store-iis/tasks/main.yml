@@ -81,16 +81,23 @@
     src: config.json.j2
     dest: '{{ iis_site.path }}'
 
-- name: Create a new Music application service
-  win_dsc:
-    resource_name: Service
-    Name: musicstore
+#- name: Create a new Music application service
+#  win_dsc:
+#    resource_name: Service
+#    Name: musicstore
+#    path: 'C:\Program Files\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
+#    DisplayName: musicstore
+#    Description: Music Store application service
+#    Ensure: Present
+#    StartupType: Manual
+#    State: Running
+
+- name: Create a new service with extra details
+  win_service:
+    name: musicstore
     path: 'C:\Program Files\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
-    DisplayName: musicstore
-    Description: Music Store application service
-    Ensure: Present
-    StartupType: Manual
-    State: Running
+    display_name: musicstore
+    description: Music Store application service
 
 - name: Open port for site on the firewall
   win_dsc:
