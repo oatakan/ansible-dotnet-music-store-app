@@ -9,6 +9,11 @@
     - xNetworking
     - cChoco
 
+- name: Install Chocolatey
+  win_dsc:
+    resource_name: cChocoInstaller
+    InstallDir: 'c:\choco'
+
 - name: Install prereq packages
   win_dsc:
     resource_name: cChocoPackageInstaller
