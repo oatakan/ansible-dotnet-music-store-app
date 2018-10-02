@@ -75,7 +75,7 @@
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
 
-- name: Stop Service
+- name: Stop service
   win_shell: Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -PassThru -Force
   ignore_errors: yes
 
@@ -89,8 +89,8 @@
     src: config.json.j2
     dest: '{{ iis_site.path }}\config.json'
 
-- name: Start the service
-  win_shell: 'C:\Progra~1\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
+- name: Start service
+  win_shell: Start-Process 'C:\Program Files\dotnet\dotnet.exe' -ArgumentList '{{ iis_site.path }}\MusicStore.dll'
   ignore_errors: yes
 
 - name: Open port for site on the firewall
