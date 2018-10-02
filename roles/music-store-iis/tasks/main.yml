@@ -75,6 +75,10 @@
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
 
+- name: Stop Service
+  win_shell: Get-Process dotnet -ErrorAction SilentlyContinue | Stop-Process -PassThru -Force
+  ignore_errors: yes
+
 - name: Unzip application files
   win_unzip:
     src: '{{ ansible_env.TEMP }}\app.zip'
@@ -87,6 +91,7 @@
 
 - name: Start the service
   win_shell: 'C:\Program Files\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
+  ignore_errors: yes
 
 - name: Open port for site on the firewall
   win_dsc:
