@@ -90,7 +90,7 @@
     dest: '{{ iis_site.path }}\config.json'
 
 - name: Start the service
-  win_shell: 'C:\Program Files\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
+  win_shell: 'C:\Progra~1\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
   ignore_errors: yes
 
 - name: Open port for site on the firewall
