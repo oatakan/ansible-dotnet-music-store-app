@@ -17,7 +17,7 @@
     - sql2016
 
 - name: install web app
-  hosts: '*iis'
+  hosts: '*iis:sql_server'
   vars:
     ansible_port: 5986
     ansible_connection: winrm
@@ -30,3 +30,5 @@
       when:
         - "'sql_server' in play_hosts"
         - hostvars['sql_server']['ip_address'] is defined
+  role:
+    - music-store-iis
