@@ -45,6 +45,13 @@
     Ensure: Absent
     Name: "Default Web Site"
 
+- name: start iis service
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: Running
+    startuptype: Automatic
+
 - name: Create IIS Website
   win_dsc:
     resource_name: xWebsite
