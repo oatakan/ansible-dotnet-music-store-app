@@ -26,6 +26,9 @@
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
+  loop:
+    - 1
+    - 2
 
 - name: Install IIS
   win_dsc:
