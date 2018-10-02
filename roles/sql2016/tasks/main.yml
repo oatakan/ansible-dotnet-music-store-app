@@ -88,6 +88,17 @@
 - name: enable tcp on SQL server instance
   win_shell: c:\enableSQLTCP.ps1
 
+- name: Open port for MSSQL
+  win_dsc:
+    resource_name: xFirewall
+    ensure: Present
+    name: MSSQL
+    enabled: True
+    localport: 1433
+    action: Allow
+    direction: Inbound
+    protocol: TCP
+
 - name: restart SQL Server instance
   win_service:
     name: MSSQLSERVER

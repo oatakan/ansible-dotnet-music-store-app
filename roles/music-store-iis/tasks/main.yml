@@ -6,51 +6,98 @@
   loop:
     - xWebAdministration
     - xNetworking
+    - cChoco
+
+- name: Install prereq packages
+  win_dsc:
+    resource_name: cChocoPackageInstaller
+    Name: "{{ item }}"
+    Ensure: Present
+  loop:
+    - dotnetcore-sdk
+    - dotnetcore-windowshosting
 
 - name: Install IIS
   win_dsc:
     resource_name: windowsfeature
-    name: Web-Server
+    Name: Web-Server
 
 - name: Create site directory structure
   win_dsc:
     resource_name: file
     ensure: Present
     type: Directory
-    destinationpath: "{{ item.path }}"
-  loop: "{{ iis_sites }}"
+    destinationpath: "{{ iis_site.path }}"
 
 - name: Create IIS Website
   win_dsc:
     resource_name: xWebsite
     Ensure: Present
-    Name: "{{ item.name }}"
+    Name: "{{ iis_site.name }}"
     State: Started
-    PhysicalPath: "{{ item.path }}"
+    PhysicalPath: "{{ iis_site.path }}"
     BindingInfo:
     - Protocol: http
-      Port: 80
+      Port: "{{ iis_site.port }}"
       IPAddress: '*'
-  loop: "{{ iis_sites }}"
   notify:
     - stop iis service
     - start iis service
+
+- name: Create Web Application
+  win_dsc:
+    resource_name: xWebApplication
+    Website: "{{ iis_site.name }}"
+    Name: "{{ iis_site.name }}Application"
+    Ensure: Present
+    WebAppPool: DefaultAppPool
+    PhysicalPath: "{{ iis_site.path }}"
+
+- name: Download application code
+  win_get_url:
+    url: '{{ code_download_url }}'
+    dest: '{{ ansible_env.TEMP }}\app.zip'
+    validate_certs: no
+
+- name: Unzip application files
+  win_unzip:
+    src: '{{ ansible_env.TEMP }}\app.zip'
+    dest: '{{ iis_site.path }}'
+    recurse: yes
+    delete_archive: no
+
+- name: Create config.json file
+  win_template:
+    src: config.json.j2
+    dest: '{{ iis_site.path }}'
+
+- name: Create a new Music application service
+  win_dsc:
+    resource_name: Service
+    Name: musicstore
+    path: 'C:\Program Files\dotnet\dotnet.exe {{ iis_site.path }}\MusicStore.dll'
+    DisplayName: musicstore
+    Description: Music Store application service
+    Ensure: Present
+    StartupType: Manual
+    State: Running
 
 - name: Open port for site on the firewall
   win_dsc:
     resource_name: xFirewall
     ensure: Present
-    name: "iisport{{ item.port }}"
+    name: "iisport{{ iis_site.port }}"
     enabled: True
-    localport: "{{ item.port }}"
+    localport: "{{ iis_site.port }}"
     action: Allow
     direction: Inbound
     protocol: TCP
-  loop: "{{ iis_sites }}"
   notify:
     - stop iis service
     - start iis service
 
+- name: flush handlers
+  meta: flush_handlers
 
 - name: proper response from iis is received
   win_uri:
@@ -58,7 +105,7 @@
     return_content: yes
     validate_certs: no
   register: response
-  until: iis_test_message in response.content
+  until: site_title in response.content
   retries: 10
   delay: 1
   ignore_errors: yes

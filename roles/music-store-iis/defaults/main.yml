@@ -1,4 +1,8 @@
-iis_sites:
-  - name: MusicStore
-    port: 80
-    path: C:\sites\musicstore
+iis_site:
+  name: MusicStore
+  port: 80
+  path: C:\sites\musicstore
+
+site_title: "Music Store (Powered by Ansible)"
+
+code_download_url: https://github.com/neilpeterson/nepeters-azure-templates/raw/master/dotnet-core-music-vm-sql-db/music-app/music-store-azure-demo-pub.zip

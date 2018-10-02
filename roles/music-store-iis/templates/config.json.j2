@@ -1,0 +1,13 @@
+{
+  "AppSettings": {
+    "SiteTitle": "{{ site_title }}",
+    "CacheDbResults": true
+  },
+  "DefaultAdminUsername": "Administrator@test.com",
+  "DefaultAdminPassword": "{{ mssql_password }}",
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server={{ sql_server_ip_address }};Database=MusicStore;Integrated Security=False;User Id=sa;Password={{ mssql_password }};MultipleActiveResultSets=True;Connect Timeout=30"
+    }
+  }
+}
