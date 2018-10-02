@@ -8,6 +8,7 @@
     - xWebAdministration
     - xNetworking
     - cChoco
+    - Pscx
 
 - name: Install Chocolatey
   win_dsc:
