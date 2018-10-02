@@ -1,0 +1,5 @@
+ec2_name_prefix: demo
+role_name: elb_role
+app_name: test_app
+
+include_group: tag_role_iis

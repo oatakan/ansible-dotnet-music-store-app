@@ -1,0 +1,111 @@
+---
+- debug:
+    msg: "number of hosts in this group: {{ groups[instance_group]|length }}"
+  run_once: yes
+
+- name: initialize instance ids
+  set_fact:
+    instance_ids: []
+  run_once: yes
+
+- name: set current region
+  set_fact:
+    current_ec2_region: "{{ hostvars[groups[instance_group][0]].ec2_region }}"
+  run_once: yes
+
+- debug:
+    msg: "current region: {{ current_ec2_region }}"
+  run_once: yes
+
+- debug:
+    msg: "current group: {{ instance_group }}"
+  run_once: yes
+
+- name: set targets from list
+  set_fact:
+    instance_ids: "{{ instance_ids|default([]) + [ {'id': hostvars[item].ec2_id, 'region': hostvars[item].ec2_region, 'vpc_id': hostvars[item].ec2_vpc_id, 'subnet_id': hostvars[item].ec2_subnet_id  } ] }}"
+  with_items:
+    - "{{ groups[instance_group] }}"
+  when: (hostvars[item].ec2_region == current_ec2_region)
+  run_once: yes
+
+- debug:
+    var: instance_ids
+  run_once: yes
+
+- name: ceate ec2 security groups
+  ec2_group:
+    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+    description: allow http and https
+    region: "{{ instance_ids[0].region }}"
+    vpc_id: "{{ instance_ids[0].vpc_id }}"
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 443
+        to_port: 443
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+    tags:
+      name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+      role: "{{ role_name }}"
+      app: "{{ app_name }}"
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: provision a new ec2 elb lb
+  ec2_elb_lb:
+    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+    state: present
+    region: "{{ instance_ids[0].region }}"
+    instance_ids: "{{ instance_ids | map(attribute='id') | unique | list }}"
+    security_group_names:
+      - "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+    subnets: "{{ instance_ids | map(attribute='subnet_id') | unique | list }}"
+    purge_instance_ids: true
+    cross_az_load_balancing: yes
+    listeners:
+      - protocol: tcp
+        load_balancer_port: 80
+        instance_port: 80
+      - protocol: tcp
+        load_balancer_port: 443
+        instance_port: 443
+        #ssl_certificate_id: "{{ ec2_cert_id }}"
+    health_check:
+      ping_protocol: tcp # options are http, https, ssl, tcp
+      ping_port: 443
+      response_timeout: 5 # seconds
+      interval: 10 # seconds
+      unhealthy_threshold: 2
+      healthy_threshold: 2
+    tags:
+      name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+      role: "{{ role_name }}"
+      app: "{{ app_name }}"
+  register: elb_lb
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: create router ELB DNS entry if it doesn't exist
+  route53:
+    state: present
+    overwrite: yes
+    zone: "{{ hosted_zone_domain_name }}"
+    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    type: A
+    value: "{{ elb_lb.elb.dns_name }}"
+    alias: True
+    alias_hosted_zone_id: "{{ elb_lb.elb.hosted_zone_id }}"
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: output url
+  debug:
+    msg: "application is available at https://{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}/"
+  run_once: yes

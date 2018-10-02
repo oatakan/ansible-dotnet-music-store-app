@@ -1,3 +1,13 @@
+- name: Remove music store app
+  hosts: '*iis'
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+  roles:
+    - ec2_elb_remove
+
 - name: Remove Windows instances
   hosts: localhost
   become: no

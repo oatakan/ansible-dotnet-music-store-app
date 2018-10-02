@@ -1,0 +1,8 @@
+ec2_name_prefix: demo
+role_name: elb_role
+app_name: test_app
+ec2_cert_id: test
+hosted_zone_domain_name: rhdemo.io
+subdomain: test
+
+include_group: tag_role_iis

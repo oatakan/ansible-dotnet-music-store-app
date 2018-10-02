@@ -1,0 +1,53 @@
+---
+- name: set current region
+  set_fact:
+    current_ec2_region: "{{ hostvars[groups[instance_group][0]].ec2_region }}"
+  run_once: yes
+
+- debug:
+    msg: "current region: {{ current_ec2_region }}"
+  run_once: yes
+
+- name: get record for router ELB DNS Entry
+  route53:
+    command: get
+    zone: "{{ hosted_zone_domain_name }}"
+    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    type: A
+  register: routerelbrec
+  when: hosted_zone_domain_name is defined and ec2_name_prefix is defined
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: delete Router ELB DNS Entry if it doesn't exist
+  route53:
+    state: absent
+    zone: "{{ hosted_zone_domain_name }}"
+    record: "{{ instance_group | regex_replace('^instance_group_','') }}.{{ ec2_name_prefix | lower }}.{{ hosted_zone_domain_name }}"
+    type: A
+    value: "{{ routerelbrec.set.value }}"
+    alias: True
+    alias_hosted_zone_id: "{{ routerelbrec.set.alias_hosted_zone_id }}"
+  when: routerelbrec.set is defined and "{} != routerelbrec.set" and routerelbrec.set.alias_hosted_zone_id is defined
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: remove ec2 elb lb
+  ec2_elb_lb:
+    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-lb"
+    state: absent
+    region: "{{ current_ec2_region }}"
+    wait: yes
+    wait_timeout: 600
+  delegate_to: 127.0.0.1
+  run_once: yes
+
+- name: remove ec2 security group
+  ec2_group:
+    name: "{{ ec2_name_prefix }}-{{ instance_group | regex_replace('^instance_group_','') }}-elb-sg"
+    description: allow http and https
+    region: "{{ current_ec2_region }}"
+    state: absent
+  delegate_to: 127.0.0.1
+  run_once: yes
+

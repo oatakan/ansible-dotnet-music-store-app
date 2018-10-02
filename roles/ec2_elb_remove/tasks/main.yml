@@ -1,0 +1,6 @@
+---
+
+- include: elb.yml instance_group='{{ include_group }}'
+  run_once: yes
+  when: groups[include_group]|length > 0
+
