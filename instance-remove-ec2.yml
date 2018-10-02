@@ -18,8 +18,7 @@
         region: "{{ ec2_region }}"
         filters:
           vpc-id: "{{ ec2_vpc_id }}"
-          "tag:app": windows_cluster_demo
-          "tag:role": 'cluster_*'
+          "tag:app": music_store_demo
       register: ec2_instances
 
     - name: terminate instances
