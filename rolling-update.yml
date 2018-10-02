@@ -54,17 +54,23 @@
       when:
         - hostvars['sql_server']['ip_address'] is defined
 
-    - name: disable the server in load balancer
-      command: echo "disable server habackend/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
-      delegate_to: "{{ item }}"
-      with_items: "{{ groups.tag_role_lbservers }}"
+    - name: de-register instance from load balancer
+      local_action:
+        module: ec2_elb
+        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+        instance_id: "{{ ec2_id }}"
+        state: absent
+      become: no
 
   roles:
     - music-store-iis
 
   post_tasks:
 
-    - name: enable the server in haproxy
-      command: echo "enable server habackend/{{ inventory_hostname }}" | socat stdio /var/lib/haproxy/stats
-      delegate_to: "{{ item }}"
-      with_items: "{{ groups.tag_role_lbservers }}"
+    - name: register instance with load balancer
+      local_action:
+        module: ec2_elb
+        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+        instance_id: "{{ ec2_id }}"
+        state: present
+      become: no
