@@ -89,9 +89,9 @@
     src: config.json.j2
     dest: '{{ iis_site.path }}\config.json'
 
-- name: Start service
-  win_shell: Start-Process 'C:\Program Files\dotnet\dotnet.exe' -ArgumentList '{{ iis_site.path }}\MusicStore.dll'
-  ignore_errors: yes
+#- name: Start service
+#  win_shell: Start-Process 'C:\Program Files\dotnet\dotnet.exe' -ArgumentList '{{ iis_site.path }}\MusicStore.dll'
+#  ignore_errors: yes
 
 - name: Open port for site on the firewall
   win_dsc:
