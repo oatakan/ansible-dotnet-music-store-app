@@ -35,6 +35,12 @@
     type: Directory
     destinationpath: "{{ iis_site.path }}"
 
+- name: Remove default IIS Site
+  win_dsc:
+    resource_name: xWebsite
+    Ensure: Absent
+    Name: "Default Web Site"
+
 - name: Create IIS Website
   win_dsc:
     resource_name: xWebsite
