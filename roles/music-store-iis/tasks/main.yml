@@ -112,6 +112,15 @@
     name: W3Svc
     state: stopped
 
+- name: Create Web Application
+  win_dsc:
+    resource_name: xWebApplication
+    Website: "{{ iis_site.name }}"
+    Name: "{{ iis_site.name }}Application"
+    Ensure: Present
+    WebAppPool: DefaultAppPool
+    PhysicalPath: "{{ iis_site.path }}"
+
 - name: ensure iis service is running
   win_dsc:
     resource_name: service
