@@ -10,4 +10,4 @@
     - node-config/nodes-openstack.yml
 
   roles:
-  - ansible-role-openstack
+  - ansible-role-os-stack
