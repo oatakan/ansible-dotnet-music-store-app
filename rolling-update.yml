@@ -40,6 +40,9 @@
         instance_id: "{{ ec2_id }}"
         state: absent
       become: no
+      vars:
+        ansible_port: 22
+        ansible_connection: local
 
   roles:
     - music-store-iis
@@ -53,3 +56,6 @@
         instance_id: "{{ ec2_id }}"
         state: present
       become: no
+      vars:
+        ansible_port: 22
+        ansible_connection: local
