@@ -5,4 +5,4 @@ iis_site:
 
 site_title: "Music Store (Powered by Ansible)"
 
-code_download_url: https://github.com/neilpeterson/nepeters-azure-templates/raw/master/dotnet-core-music-vm-sql-db/music-app/music-store-azure-demo-pub.zip
+code_download_url: https://github.com/oatakan/MusicStore/releases/download/rel%2F2.0.0-test1/music-store-rel-2.0.0-test1.zip
