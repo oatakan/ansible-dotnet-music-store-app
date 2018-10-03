@@ -10,5 +10,5 @@
     - node-config/nodes-openstack.yml
 
   roles:
-    - role: ansible-role-openstack
+    - role: ansible-role-os-stack
       role_action: deprovision
