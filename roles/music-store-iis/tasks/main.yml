@@ -134,3 +134,138 @@
   debug:
     msg: 'application is available at http://{{ ansible_host }}/'
   when: response is success
+
+- name: Install required DSC modules
+  win_psmodule:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - xWebAdministration
+    - xNetworking
+    - cChoco
+
+- name: Install Chocolatey
+  win_dsc:
+    resource_name: cChocoInstaller
+    InstallDir: 'c:\choco'
+
+- name: Install dotnetcore-sdk
+  win_dsc:
+    resource_name: cChocoPackageInstaller
+    Name: dotnetcore-sdk
+    Ensure: Present
+    Version: 1.1.2
+
+- name: Install dotnetcore-windowshosting
+  win_dsc:
+    resource_name: cChocoPackageInstaller
+    Name: dotnetcore-windowshosting
+    Ensure: Present
+
+- name: Install IIS
+  win_dsc:
+    resource_name: windowsfeature
+    Name: Web-Server
+
+- name: Create site directory structure
+  win_dsc:
+    resource_name: file
+    ensure: Present
+    type: Directory
+    destinationpath: "{{ iis_site.path }}"
+
+- name: Remove default IIS Site
+  win_dsc:
+    resource_name: xWebsite
+    Ensure: Absent
+    Name: "Default Web Site"
+
+- name: Ensure iis service is running
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: Running
+    startuptype: Automatic
+
+- name: Create IIS Website
+  win_dsc:
+    resource_name: xWebsite
+    Ensure: Present
+    Name: "{{ iis_site.name }}"
+    State: Started
+    PhysicalPath: "{{ iis_site.path }}"
+    BindingInfo:
+    - Protocol: http
+      Port: 80
+      IPAddress: '*'
+
+- name: Create Web Application
+  win_dsc:
+    resource_name: xWebApplication
+    Website: "{{ iis_site.name }}"
+    Name: "{{ iis_site.name }}Application"
+    Ensure: Present
+    WebAppPool: DefaultAppPool
+    PhysicalPath: "{{ iis_site.path }}"
+
+- name: Download application code
+  win_get_url:
+    url: '{{ code_download_url }}'
+    dest: '{{ ansible_env.TEMP }}\app.zip'
+    validate_certs: no
+
+- name: Ensure iis service is stopped
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: stopped
+
+- name: Unzip application files
+  win_unzip:
+    src: '{{ ansible_env.TEMP }}\app.zip'
+    dest: '{{ iis_site.path }}'
+
+- name: Create config.json file
+  win_template:
+    src: config.json.j2
+    dest: '{{ iis_site.path }}\config.json'
+
+- name: Open port for site on the firewall
+  win_dsc:
+    resource_name: xFirewall
+    ensure: Present
+    name: "iisport{{ iis_site.port }}"
+    enabled: True
+    localport: "{{ iis_site.port }}"
+    action: Allow
+    direction: Inbound
+    protocol: TCP
+
+- name: ensure iis service is stopped
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: stopped
+
+- name: ensure iis service is running
+  win_dsc:
+    resource_name: service
+    name: W3Svc
+    state: Running
+    startuptype: Automatic
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
+- name: output url
+  debug:
+    msg: 'application is available at http://{{ ansible_host }}/'
+  when: response is success
