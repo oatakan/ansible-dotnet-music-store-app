@@ -32,6 +32,12 @@
     resource_name: windowsfeature
     Name: Web-Server
 
+- name: Install dotnetcore-windowshosting
+  win_dsc:
+    resource_name: cChocoPackageInstaller
+    Name: dotnetcore-windowshosting
+    Ensure: Present
+
 - name: Create site directory structure
   win_dsc:
     resource_name: file
@@ -51,12 +57,6 @@
     name: W3Svc
     state: Running
     startuptype: Automatic
-
-- name: Install dotnetcore-windowshosting
-  win_dsc:
-    resource_name: cChocoPackageInstaller
-    Name: dotnetcore-windowshosting
-    Ensure: Present
 
 - name: Create IIS Website
   win_dsc:
