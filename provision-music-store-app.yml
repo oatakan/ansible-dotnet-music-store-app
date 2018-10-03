@@ -31,3 +31,4 @@
         - hostvars['sql_server']['ip_address'] is defined
   roles:
     - music-store-iis
+    - music-store-iis

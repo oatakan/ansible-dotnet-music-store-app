@@ -27,19 +27,6 @@
     Name: dotnetcore-windowshosting
     Ensure: Present
 
-- name: Install dotnetcore-sdk
-  win_dsc:
-    resource_name: cChocoPackageInstaller
-    Name: dotnetcore-sdk
-    Ensure: Present
-    Version: 1.1.2
-
-- name: Install dotnetcore-windowshosting
-  win_dsc:
-    resource_name: cChocoPackageInstaller
-    Name: dotnetcore-windowshosting
-    Ensure: Present
-
 - name: Install IIS
   win_dsc:
     resource_name: windowsfeature
