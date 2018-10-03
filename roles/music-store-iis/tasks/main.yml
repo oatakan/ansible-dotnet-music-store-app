@@ -9,11 +9,6 @@
     - xNetworking
     - cChoco
 
-- name: Install IIS
-  win_dsc:
-    resource_name: windowsfeature
-    Name: Web-Server
-
 - name: Install Chocolatey
   win_dsc:
     resource_name: cChocoInstaller
@@ -25,6 +20,11 @@
     Name: dotnetcore-sdk
     Ensure: Present
     Version: 1.1.2
+
+- name: Install IIS
+  win_dsc:
+    resource_name: windowsfeature
+    Name: Web-Server
 
 - name: Install dotnetcore-windowshosting
   win_dsc:
