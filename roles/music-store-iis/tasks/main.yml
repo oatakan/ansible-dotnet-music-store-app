@@ -144,10 +144,32 @@
     - xNetworking
     - cChoco
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Install Chocolatey
   win_dsc:
     resource_name: cChocoInstaller
     InstallDir: 'c:\choco'
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Install dotnetcore-sdk
   win_dsc:
@@ -156,16 +178,49 @@
     Ensure: Present
     Version: 1.1.2
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Install dotnetcore-windowshosting
   win_dsc:
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Install IIS
   win_dsc:
     resource_name: windowsfeature
     Name: Web-Server
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Create site directory structure
   win_dsc:
@@ -174,11 +229,33 @@
     type: Directory
     destinationpath: "{{ iis_site.path }}"
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Remove default IIS Site
   win_dsc:
     resource_name: xWebsite
     Ensure: Absent
     Name: "Default Web Site"
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Ensure iis service is running
   win_dsc:
@@ -186,6 +263,17 @@
     name: W3Svc
     state: Running
     startuptype: Automatic
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Create IIS Website
   win_dsc:
@@ -199,6 +287,17 @@
       Port: 80
       IPAddress: '*'
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Create Web Application
   win_dsc:
     resource_name: xWebApplication
@@ -208,11 +307,33 @@
     WebAppPool: DefaultAppPool
     PhysicalPath: "{{ iis_site.path }}"
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Download application code
   win_get_url:
     url: '{{ code_download_url }}'
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Ensure iis service is stopped
   win_dsc:
@@ -220,15 +341,48 @@
     name: W3Svc
     state: stopped
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Unzip application files
   win_unzip:
     src: '{{ ansible_env.TEMP }}\app.zip'
     dest: '{{ iis_site.path }}'
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: Create config.json file
   win_template:
     src: config.json.j2
     dest: '{{ iis_site.path }}\config.json'
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: Open port for site on the firewall
   win_dsc:
@@ -241,11 +395,33 @@
     direction: Inbound
     protocol: TCP
 
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
+
 - name: ensure iis service is stopped
   win_dsc:
     resource_name: service
     name: W3Svc
     state: stopped
+
+- name: proper response from iis is received
+  win_uri:
+    url: http://{{ ansible_host }}/
+    return_content: yes
+    validate_certs: no
+  register: response
+  until: site_title in response.content
+  retries: 10
+  delay: 1
+  ignore_errors: yes
 
 - name: ensure iis service is running
   win_dsc:
