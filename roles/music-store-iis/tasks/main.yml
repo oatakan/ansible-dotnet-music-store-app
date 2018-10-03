@@ -27,16 +27,19 @@
     Name: dotnetcore-windowshosting
     Ensure: Present
 
-- name: Install IIS
-  win_dsc:
-    resource_name: windowsfeature
-    Name: Web-Server
+- pause:
+    minutes: 2
 
 - name: Install dotnetcore-windowshosting
   win_dsc:
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
+
+- name: Install IIS
+  win_dsc:
+    resource_name: windowsfeature
+    Name: Web-Server
 
 - name: Create site directory structure
   win_dsc:
