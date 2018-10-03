@@ -106,6 +106,9 @@
     direction: Inbound
     protocol: TCP
 
+- pause:
+    minutes: 2
+
 - name: ensure iis service is stopped
   win_dsc:
     resource_name: service
