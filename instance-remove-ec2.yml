@@ -2,11 +2,6 @@
   hosts: '*iis'
   gather_facts: no
   become: no
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
   roles:
     - role: ec2_elb_remove
       ignore_errors: yes
