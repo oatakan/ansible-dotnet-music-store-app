@@ -3,3 +3,5 @@
 - include: credential_type.yml
 
 - include: credential.yml
+
+- include: job_template.yml
