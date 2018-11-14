@@ -1,5 +1,7 @@
 - name: Remove music store app
   hosts: '*iis'
+  gather_facts: no
+  become: no
   vars:
     ansible_port: 5986
     ansible_connection: winrm
@@ -12,6 +14,7 @@
 - name: Remove Windows instances
   hosts: tag_app_music_store_demo
   become: no
+  gather_facts: no
   tasks:
     - name: get ec2 instance information
       ec2_instance_facts:
