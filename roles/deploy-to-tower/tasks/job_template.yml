@@ -37,10 +37,7 @@
     inventory: aws-windows-demo
     project: ansible-dotnet-music-store-app
     playbook: rolling-update.yml
-    credential:
-      - aws-demo
-      - aws-windows-machine
-      - mssql
+    credential: aws-windows-machine
     limit: tag_app_music_store_demo
     state: present
     tower_host: '{{ tower_host }}'
