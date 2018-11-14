@@ -25,6 +25,6 @@
       ec2:
         region: "{{ ec2_region }}"
         state: "absent"
-        instance_ids: "{{ ec2_instances.instances | map(attribute='id') | list }}"
+        instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
       delegate_to: localhost
       run_once: yes
