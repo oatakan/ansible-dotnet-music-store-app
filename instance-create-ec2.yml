@@ -9,4 +9,5 @@
     - node-config/nodes-ec2.yml
 
   roles:
+  - ec2-find-amis
   - ansible-role-ec2
