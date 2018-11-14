@@ -16,7 +16,6 @@
     region: "{{ ec2_region }}"
   register: win2016_ami_find
 
-
 - name: set ami id for rhel7
   set_fact:
     rhel7_ami_id: "{{ rhel7_ami_find.results[0].ami_id }}"
