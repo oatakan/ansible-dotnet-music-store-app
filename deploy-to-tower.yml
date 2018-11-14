@@ -1,0 +1,9 @@
+---
+
+- name: deploy to tower
+  hosts: all
+  become: no
+  gather_facts: no
+  roles:
+    - role: deploy-to-tower
+      delegate_to: localhost
