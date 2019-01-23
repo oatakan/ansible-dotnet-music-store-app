@@ -22,8 +22,8 @@
         var: template_facts.virtual_machines
 
     - debug:
-        var: item.key
-      loop: "{{ template_facts.virtual_machines }}"
+        var: template_facts.virtual_machines[item.template].guest_fullname
+      loop: "{{ nodes }}"
 
 #    - name: check for non-existing templates
 #      set_fact:
