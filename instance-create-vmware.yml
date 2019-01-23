@@ -8,6 +8,19 @@
   vars_files:
     - node-config/nodes-vmware.yml
 
+  pre_tasks:
+    - name: gather only registered virtual machine templates
+      vmware_vm_facts:
+        hostname: "{{ lookup('env', 'VMWARE_HOST')|default(providers.vcenter.hostname) }}"
+        username: "{{ lookup('env', 'VMWARE_USER')|default(providers.vcenter.username) }}"
+        password: "{{ lookup('env', 'VMWARE_PASSWORD')|default(providers.vcenter.password) }}"
+        validate_certs: no
+        vm_type: template
+      register: template_facts
+
+    - debug:
+        var: template_facts.virtual_machines
+
   roles:
   - ansible-role-vmware
   
