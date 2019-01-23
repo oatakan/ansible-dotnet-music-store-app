@@ -23,7 +23,7 @@
 
     - debug:
         var: item.key
-      loop: template_facts.virtual_machines
+      loop: "{{ template_facts.virtual_machines }}"
 
 #    - name: check for non-existing templates
 #      set_fact:
