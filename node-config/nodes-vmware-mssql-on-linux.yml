@@ -35,7 +35,6 @@ nodes:
       - 8.8.8.8
       - 8.8.4.4
       password: '{{ ansible_password | default(ansible_ssh_password) }}'
-    ansible_port: 23
   - name: winweb1
     role: iis
     app_name: music_store_demo
