@@ -21,12 +21,17 @@
     - debug:
         var: template_facts.virtual_machines
 
-    - name: check for non-existing templates
-      set_fact:
-        nodes_with_non_existing_templates: '{{ nodes | json_query(query) }}'
-      vars:
-        query: "@[?!contains(`{{ template_facts.virtual_machines.matches | map(key) | list }}`, template)]"
-      when: template_facts is success
+    - debug:
+        var: item.key
+      loop: template_facts.virtual_machines
+
+#    - name: check for non-existing templates
+#      set_fact:
+#        nodes_with_non_existing_templates: '{{ nodes | json_query(query) }}'
+#      vars:
+#        query: "@[?!contains(`{{ template_facts.virtual_machines.matches | map(key) | list }}`, template)]"
+#        query: "json[?template=='{{ group_name }}']"
+#      when: template_facts is success
 
     - debug:
         var: nodes_with_non_existing_templates
