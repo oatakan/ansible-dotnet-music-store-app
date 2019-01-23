@@ -26,7 +26,7 @@
       loop: "{{ nodes }}"
 
     - fail:
-        msg: "Template not found on vcenter: item.template"
+        msg: "Template not found on vcenter: {{ item.template }}"
       when:
         - template_facts is success
         - template_facts.virtual_machines is defined
