@@ -10,7 +10,6 @@
     - debug:
         var: hostvars['sql_server']['ip_address']
   roles:
-    #- robertdebock.bootstrap
     - role: ansible-role-mssql
       mssql_sa_password: "{{ mssql_password }}"
 

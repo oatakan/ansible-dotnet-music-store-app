@@ -16,5 +16,3 @@
 
 - src: https://github.com/oatakan/ansible-role-mssql
   version: origin/master
-
-- src: robertdebock.bootstrap
