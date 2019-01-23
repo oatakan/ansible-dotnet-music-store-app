@@ -25,7 +25,7 @@
       set_fact:
         nodes_with_non_existing_templates: '{{ nodes | json_query(query) }}'
       vars:
-        query: "@[?!contains(`{{ template_facts.virtual_machines.matches }}`, template)]"
+        query: "@[?!contains(`{{ template_facts.virtual_machines.matches | map(key) | list }}`, template)]"
       when: template_facts is success
 
     - debug:
