@@ -1,5 +1,6 @@
 - name: install sql server
   hosts: '*sql_server'
+  become: yes
   pre_tasks:
     - name: set ad server ip
       add_host:
