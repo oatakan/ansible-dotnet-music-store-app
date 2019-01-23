@@ -1,6 +1,9 @@
 - name: install sql server
   hosts: '*sql_server'
   pre_tasks:
+    - debug:
+        var: hostvars[inventory_hostname]
+
     - name: set ad server ip
       add_host:
         name: sql_server
