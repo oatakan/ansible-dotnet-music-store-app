@@ -18,13 +18,6 @@
         vm_type: template
       register: template_facts
 
-    - debug:
-        var: template_facts.virtual_machines
-
-    - debug:
-        var: template_facts.virtual_machines[item.template].guest_fullname
-      loop: "{{ nodes }}"
-
     - fail:
         msg: "Template not found on vcenter: {{ item.template }}"
       when:

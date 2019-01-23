@@ -21,7 +21,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: centos75-x64-bigdisk_v5
+    template: centos75-x64-bigdisk_v4
     snapshot_src: Linked
     linked_clone: True
     customvalues:
