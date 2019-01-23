@@ -8,27 +8,6 @@
   vars_files:
     - node-config/nodes-vmware-mssql-on-linux.yml
 
-  pre_tasks:
-    - name: gather only registered virtual machine templates
-      vmware_vm_facts:
-        hostname: "{{ lookup('env', 'VMWARE_HOST')|default(providers.vcenter.hostname) }}"
-        username: "{{ lookup('env', 'VMWARE_USER')|default(providers.vcenter.username) }}"
-        password: "{{ lookup('env', 'VMWARE_PASSWORD')|default(providers.vcenter.password) }}"
-        validate_certs: no
-        vm_type: template
-      register: template_facts
-
-    - fail:
-        msg: "Template not found on vcenter: {{ item.template }}"
-      when:
-        - template_facts is success
-        - template_facts.virtual_machines is defined
-        - item.template is defined
-        - template_facts.virtual_machines[item.template] is not defined
-      loop: "{{ nodes }}"
-
-    - pause:
-
   roles:
   - ansible-role-vmware
   
