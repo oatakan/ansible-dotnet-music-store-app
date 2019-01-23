@@ -10,6 +10,7 @@
     - debug:
         var: hostvars['sql_server']['ip_address']
   roles:
+    - robertdebock.bootstrap
     - ansible-role-mssql
 
 - name: install music store app

@@ -30,10 +30,10 @@ nodes:
       - key: role
         value: sql_server
     customization:
-      autologon: True
-      orgname: Ansible
-      fullname: Ansible
-      timezone: 20
+      domain: home.ad
+      dns_servers:
+      - 8.8.8.8
+      - 8.8.4.4
       password: '{{ ansible_password | default(ansible_ssh_password) }}'
   - name: winweb1
     role: iis
