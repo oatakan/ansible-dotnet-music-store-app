@@ -1,0 +1,85 @@
+---
+
+- name: get sql server details
+  hosts: '*sql_server'
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+  pre_tasks:
+    - name: set ad server ip
+      add_host:
+        name: sql_server
+        ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
+
+    - debug:
+        var: hostvars['sql_server']['ip_address']
+
+- name: rolling os patching
+  hosts: '*iis'
+  serial: "50%"
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
+
+  pre_tasks:
+
+    - name: set ip address of sql server
+      set_fact:
+        sql_server_ip_address: "{{ hostvars['sql_server']['ip_address'] }}"
+      when:
+        - hostvars['sql_server']['ip_address'] is defined
+
+    - name: de-register instance from load balancer
+      local_action:
+        module: ec2_elb
+        region: "{{ ec2_region }}"
+        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+        instance_id: "{{ ec2_id }}"
+        state: absent
+      become: no
+      vars:
+        ansible_port: 22
+        ansible_connection: local
+
+    - name: stop services
+      win_service:
+        name: iis
+        state: stopped
+
+  roles:
+    - windows-patch
+
+  post_tasks:
+
+    - name: start services
+      win_service:
+        name: iis
+        state: started
+
+    - name: smoke test for application
+      win_url:
+        url: https://{{ hostname }}
+        return: 202, 205
+
+    - name: check a file exists
+      file:
+
+    - name: roll back
+      file:
+
+    - name: register instance with load balancer
+      local_action:
+        module: ec2_elb
+        region: "{{ ec2_region }}"
+        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+        instance_id: "{{ ec2_id }}"
+        state: present
+      become: no
+      vars:
+        ansible_port: 22
+        ansible_connection: local
+

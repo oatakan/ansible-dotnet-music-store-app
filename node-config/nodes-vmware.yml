@@ -21,9 +21,9 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-2016-standard-core
-    snapshot_src: Linked
-    linked_clone: True
+    template: windows-2019-standard-core
+#    snapshot_src: Linked
+#    linked_clone: True
     customvalues:
       - key: app_name
         value: music_store_demo
@@ -53,9 +53,9 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-2016-standard-core
-    snapshot_src: Linked
-    linked_clone: True
+    template: windows-2019-standard-core
+#    snapshot_src: Linked
+#    linked_clone: True
     customvalues:
       - key: app_name
         value: music_store_demo
