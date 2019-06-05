@@ -8,9 +8,9 @@ nodes:
     image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
-        volume_type: gp2
-        volume_size: 50
-        delete_on_termination: true
+        ebs:
+          volume_size: 50
+          delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
   - name: winweb1
     role: iis
@@ -19,9 +19,9 @@ nodes:
     image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
-        volume_type: gp2
-        volume_size: 50
-        delete_on_termination: true
+        ebs:
+          volume_size: 50
+          delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
   - name: winweb2
     role: iis
@@ -30,9 +30,9 @@ nodes:
     image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
-        volume_type: gp2
-        volume_size: 50
-        delete_on_termination: true
+        ebs:
+          volume_size: 50
+          delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
   - name: winweb3
     role: iis
@@ -41,7 +41,7 @@ nodes:
     image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
-        volume_type: gp2
-        volume_size: 50
-        delete_on_termination: true
+        ebs:
+          volume_size: 50
+          delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
