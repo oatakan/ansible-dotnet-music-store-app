@@ -83,7 +83,7 @@
     - job_template_extra_vars is defined
 
 - debug:
-    var: reg_mssql_credential.id
+    var: reg_credential_aws_demo
 
 - name: update job template with extra credentials
   uri:
@@ -105,6 +105,6 @@
   ignore_errors: yes
   vars:
     body:
-      id: '{{ reg_mssql_credential.id }}'
+      id: '{{ reg_mssql_credential.id | int }}'
   when:
     - reg_mssql_credential.id is defined
