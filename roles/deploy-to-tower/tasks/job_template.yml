@@ -42,12 +42,13 @@
     limit: tag_app_music_store_demo
     survey_enabled: yes
     survey_spec:
-      default: 2.0.0-test1
-      required: true
-      choices: "2.0.0-test1\n2.0.0-test2"
-      variable: app_version
-      question_name: Which version to install?
-      type: multiplechoice
+      spec:
+        default: 2.0.0-test1
+        required: true
+        choices: "2.0.0-test1\n2.0.0-test2"
+        variable: app_version
+        question_name: Which version to install?
+        type: multiplechoice
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
