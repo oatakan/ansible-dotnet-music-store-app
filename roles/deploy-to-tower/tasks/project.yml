@@ -1,0 +1,16 @@
+---
+
+- name: create ansible-dotnet-music-store-app project
+  tower_project:
+    name: ansible-dotnet-music-store-app
+    description: ansible-dotnet-music-store-app
+    organization: Default
+    scm_update_on_launch: True
+    scm_type: git
+    scm_url: https://github.com/oatakan/ansible-dotnet-music-store-app.git
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    tower_verify_ssl: '{{ tower_verify_ssl }}'
+  register: reg_project_ansible_dotnet_music_store_app

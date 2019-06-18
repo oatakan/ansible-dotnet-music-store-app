@@ -31,7 +31,7 @@
   register: reg_credential_aws_demo
 
 - block:
-    - name: create rolling update job template
+    - name: create rolling update job template using module
       tower_job_template:
         name: Music Store Rolling Update
         description: Music Store Rolling Update
@@ -50,7 +50,7 @@
       register: reg_job_template_rolling_update
 
   rescue:
-    - name: create rolling update job template
+    - name: create rolling update job template using uri
       uri:
         method: POST
         url: "https://{{ tower_host }}/api/v2/job_templates/"
@@ -78,3 +78,6 @@
           playbook: rolling-update.yml
           credential: aws-windows-machine
           limit: tag_app_music_store_demo
+      when:
+        - reg_credential_type_mssql is defined
+        - reg_credential_type_mssql.id is defined

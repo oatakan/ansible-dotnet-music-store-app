@@ -1,0 +1,32 @@
+---
+
+- name: create aws-windows-demo inventory
+  tower_inventory:
+    name: aws-windows-demo
+    description: aws-windows-demo
+    organization: Default
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    tower_verify_ssl: '{{ tower_verify_ssl }}'
+  register: reg_tower_inventory_aws_windows_demo
+
+- name: create tower inventory source
+  tower_inventory_source:
+    name: aws-windows-demo-source
+    description: aws-windows-demo-source
+    inventory: aws-windows-demo
+    credential: aws-demo
+    source: ec2
+    update_on_launch: yes
+    overwrite: yes
+    instance_filters: "tag:app=music_store_demo"
+    group_by: tag_keys
+    source_regions: us-east-1
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    tower_verify_ssl: '{{ tower_verify_ssl }}'
+  register: reg_tower_inventory_source_aws_windows_demo_source
