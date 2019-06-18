@@ -84,7 +84,7 @@
 
 - name: update job template with extra credentials
   uri:
-    method: PATCH
+    method: POST
     url: "https://{{ tower_host }}/api/v2/job_templates/{{ reg_job_template_rolling_update.id }}/credentials/"
     user: "{{ tower_username }}"
     password: "{{ tower_password }}"
