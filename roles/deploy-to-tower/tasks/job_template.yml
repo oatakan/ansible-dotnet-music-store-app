@@ -82,3 +82,28 @@
   when:
     - reg_job_template_rolling_update.id is defined
     - job_template_extra_vars is defined
+
+- name: update job template with extra credentials
+  uri:
+    method: POST
+    url: "https://{{ tower_host }}/api/v2/job_templates/{{ reg_job_template_rolling_update.id }}/credentials/"
+    user: "{{ tower_username }}"
+    password: "{{ tower_password }}"
+    validate_certs: "{{ tower_verify_ssl|bool }}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    body: "{{ body | to_json }}"
+    body_format: json
+    status_code:
+      - 200
+      - 201
+  ignore_errors: yes
+  vars:
+    body:
+      name: mssql
+      description: Microsoft SQL server credential
+      credential_type: "{{ reg_credential_type_mssql.id }}"
+  when:
+    - reg_credential_type_mssql.id is defined
