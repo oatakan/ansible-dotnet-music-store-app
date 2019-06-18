@@ -43,12 +43,12 @@
     survey_enabled: yes
     survey_spec:
       spec:
-        default: 2.0.0-test1
-        required: true
-        choices: "2.0.0-test1\n2.0.0-test2"
-        variable: app_version
-        question_name: Which version to install?
-        type: multiplechoice
+        - default: 2.0.0-test1
+          required: true
+          choices: "2.0.0-test1\n2.0.0-test2"
+          variable: app_version
+          question_name: Which version to install?
+          type: multiplechoice
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
