@@ -61,7 +61,7 @@
 
 - name: update job template with extra vars
   uri:
-    method: POST
+    method: PATCH
     url: "https://{{ tower_host }}/api/v2/job_templates/{{ reg_job_template_rolling_update.id }}/"
     user: "{{ tower_username }}"
     password: "{{ tower_password }}"
@@ -78,7 +78,6 @@
   ignore_errors: yes
   vars:
     body:
-      name: Music Store Rolling Update
       extra_vars:
         test_var: value
   when:
