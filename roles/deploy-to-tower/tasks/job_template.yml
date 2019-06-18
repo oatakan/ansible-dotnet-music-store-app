@@ -82,6 +82,9 @@
     - reg_job_template_rolling_update.id is defined
     - job_template_extra_vars is defined
 
+- debug:
+    var: reg_mssql_credential
+
 - name: update job template with extra credentials
   uri:
     method: POST
