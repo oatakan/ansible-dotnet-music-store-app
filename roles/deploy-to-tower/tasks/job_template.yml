@@ -102,8 +102,6 @@
   ignore_errors: yes
   vars:
     body:
-      name: mssql
-      description: Microsoft SQL server credential
-      credential_type: "{{ reg_credential_type_mssql.id }}"
+      id: "{{ reg_mssql_credential.id }}"
   when:
     - reg_credential_type_mssql.id is defined
