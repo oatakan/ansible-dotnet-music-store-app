@@ -103,8 +103,8 @@
   vars:
     body: '{ "id": {{ item.id | int }} }'
   loop:
-    - reg_mssql_credential
-    - reg_credential_aws_demo
+    - "{{ reg_mssql_credential }}"
+    - "{{ reg_credential_aws_demo }}"
   when:
     - reg_mssql_credential is defined
     - reg_credential_aws_demo is defined
