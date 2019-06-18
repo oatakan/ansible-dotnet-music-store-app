@@ -42,6 +42,8 @@
     limit: tag_app_music_store_demo
     survey_enabled: yes
     survey_spec:
+      name: survey
+      description: survey
       spec:
         - default: 2.0.0-test1
           required: true
