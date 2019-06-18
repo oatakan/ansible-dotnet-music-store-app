@@ -78,6 +78,9 @@
   ignore_errors: yes
   vars:
     body:
+      name: Music Store Rolling Update
+      description: Music Store Rolling Update
+      job_type: run
       extra_vars:
         test_var: value
   when:
