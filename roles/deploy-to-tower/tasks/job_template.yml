@@ -30,54 +30,27 @@
     tower_verify_ssl: '{{ tower_verify_ssl }}'
   register: reg_credential_aws_demo
 
-- block:
-    - name: create rolling update job template using module
-      tower_job_template:
-        name: Music Store Rolling Update
-        description: Music Store Rolling Update
-        job_type: run
-        inventory: aws-windows-demo
-        project: ansible-dotnet-music-store-app
-        playbook: rolling-update.yml
-        #organization: Default
-        credential: aws-windows-machine
-        limit: tag_app_music_store_demo
-        state: present
-        tower_host: '{{ tower_host }}'
-        tower_username: '{{ tower_username }}'
-        tower_password: '{{ tower_password }}'
-        tower_verify_ssl: '{{ tower_verify_ssl }}'
-      register: reg_job_template_rolling_update
-
-  rescue:
-    - name: create rolling update job template using uri
-      uri:
-        method: POST
-        url: "https://{{ tower_host }}/api/v2/job_templates/"
-        user: "{{ tower_username }}"
-        password: "{{ tower_password }}"
-        validate_certs: "{{ tower_verify_ssl|bool }}"
-        force_basic_auth: yes
-        headers:
-          Content-Type: "application/json"
-          Accept: "application/json"
-        body: "{{ body | to_json }}"
-        body_format: json
-        status_code:
-          - 200
-          - 201
-      register: reg_job_template_rolling_update
-      ignore_errors: yes
-      vars:
-        body:
-          name: Music Store Rolling Update
-          description: Music Store Rolling Update
-          job_type: run
-          inventory: aws-windows-demo
-          project: ansible-dotnet-music-store-app
-          playbook: rolling-update.yml
-          credential: aws-windows-machine
-          limit: tag_app_music_store_demo
-      when:
-        - reg_credential_type_mssql is defined
-        - reg_credential_type_mssql.id is defined
+- name: create rolling update job template using module
+  tower_job_template:
+    name: Music Store Rolling Update
+    description: Music Store Rolling Update
+    job_type: run
+    inventory: aws-windows-demo
+    project: ansible-dotnet-music-store-app
+    playbook: rolling-update.yml
+    credential: aws-windows-machine
+    limit: tag_app_music_store_demo
+    survey_enabled: yes
+    survey_spec:
+      default: 2.0.0-test1
+      required: true
+      choices: "2.0.0-test1\n2.0.0-test2"
+      variable: app_version
+      question_name: Which version to install?
+      type: multiplechoice
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    tower_verify_ssl: '{{ tower_verify_ssl }}'
+  register: reg_job_template_rolling_update
