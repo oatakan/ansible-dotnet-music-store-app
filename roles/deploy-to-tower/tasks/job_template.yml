@@ -1,6 +1,5 @@
 ---
 
-
 - name: create aws windows machine credentials
   tower_credential:
     name: aws-windows-machine
@@ -83,6 +82,9 @@
     - reg_job_template_rolling_update.id is defined
     - job_template_extra_vars is defined
 
+- debug:
+    var: reg_mssql_credential.id
+
 - name: update job template with extra credentials
   uri:
     method: POST
@@ -99,9 +101,10 @@
     status_code:
       - 200
       - 201
+      - 204
   ignore_errors: yes
   vars:
     body:
-      id: 2
+      id: '{{ reg_mssql_credential.id }}'
   when:
-    - reg_credential_type_mssql.id is defined
+    - reg_mssql_credential.id is defined
