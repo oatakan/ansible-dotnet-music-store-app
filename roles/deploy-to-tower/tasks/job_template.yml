@@ -33,11 +33,12 @@
 - name: create rolling update job template
   tower_job_template:
     name: Music Store Rolling Update
+    description: Music Store Rolling Update
     job_type: run
     inventory: aws-windows-demo
     project: ansible-dotnet-music-store-app
     playbook: rolling-update.yml
-    organization: Default
+    #organization: Default
     credential: aws-windows-machine
     limit: tag_app_music_store_demo
     state: present
