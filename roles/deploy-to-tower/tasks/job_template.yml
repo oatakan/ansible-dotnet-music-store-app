@@ -48,6 +48,7 @@
           choices: "2.0.0-test1\n2.0.0-test2"
           variable: app_version
           question_name: Which version to install?
+          description: Select a version from the list
           type: multiplechoice
     state: present
     tower_host: '{{ tower_host }}'
