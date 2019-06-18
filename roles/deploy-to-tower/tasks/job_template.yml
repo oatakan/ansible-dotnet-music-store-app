@@ -81,8 +81,7 @@
       name: Music Store Rolling Update
       description: Music Store Rolling Update
       job_type: run
-      extra_vars:
-        test_var: value
+      extra_vars: '{ "test_var": "value" }'
   when:
     - reg_job_template_rolling_update.id is defined
     - job_template_extra_vars is defined
