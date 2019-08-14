@@ -84,6 +84,13 @@
       /SQLBACKUPDIR=C:\Backup
       /SQLUSERDBDIR=C:\Databases
       /SQLUSERDBLOGDIR=C:\UserDatabases
+  register: sql_install
+
+- name: reboot if needed
+  win_reboot:
+  when:
+    - sql_install.reboot_required is defined
+    - sql_install.reboot_required
 
 - name: unmount iso
   win_disk_image:
