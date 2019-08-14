@@ -31,6 +31,7 @@
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
+    Version: 2.2.5
 
 - name: Create site directory structure
   win_dsc:
