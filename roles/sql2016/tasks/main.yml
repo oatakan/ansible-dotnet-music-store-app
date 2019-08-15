@@ -56,6 +56,19 @@
   retries: 5
   when: (":" in iso_path) and (not iso_file.stat.exists)
 
+- name: re-check ISO file
+  win_stat:
+    path: "{{ iso_path }}"
+  register: iso_file_recheck
+
+- name: fail if file is not downloaded
+  fail:
+    msg: "{{ iso_path }} doesn't exist"
+  when:
+    - download_iso is defined
+    - download_iso is success
+    - not iso_file_recheck.stat.exists
+
 - name: mount iso
   win_disk_image:
     image_path: "{{ iso_path }}"
