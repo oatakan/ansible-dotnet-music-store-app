@@ -60,6 +60,7 @@
   win_stat:
     path: "{{ iso_path }}"
   register: iso_file_recheck
+  when: (":" in iso_path) and (not iso_file.stat.exists)
 
 - name: fail if file is not downloaded
   fail:
