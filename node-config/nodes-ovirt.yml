@@ -21,7 +21,7 @@ nodes:
     cpu: 2
     type: server
     user_name: vagrant
-    template: windows-2019-standard-core-auto
+    template: windows-2019
     sysprep: yes
   - name: winweb2
     role: iis
@@ -40,5 +40,5 @@ nodes:
     cpu: 2
     type: server
     user_name: vagrant
-    template: windows-2019-standard-core-auto
+    template: windows-2019
     sysprep: yes
