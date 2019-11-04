@@ -27,7 +27,7 @@ nodes:
     vm_size: Standard_D2s_v3
     os_type: Windows
     image:
-      sku: 2019-Datacenter-Core-smalldisk
+      sku: "{{ win2019_image_sku|default('2019-Datacenter-Core-smalldisk') }}"
       publisher: MicrosoftWindowsServer
       version: latest
       offer: WindowsServer
@@ -37,7 +37,7 @@ nodes:
     vm_size: Standard_D2s_v3
     os_type: Windows
     image:
-      sku: 2019-Datacenter-Core-smalldisk
+      sku: "{{ win2019_image_sku|default('2019-Datacenter-Core-smalldisk') }}"
       publisher: MicrosoftWindowsServer
       version: latest
       offer: WindowsServer

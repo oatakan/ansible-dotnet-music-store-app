@@ -5,7 +5,7 @@ nodes:
     role: sql_server
     app_name: music_store_demo
     flavor: m1.medium
-    image: windows-2019-standard-core
+    image: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
     key_name: ansible-oatakan
     volume_size: 30
     nics:
@@ -15,7 +15,7 @@ nodes:
     role: iis
     app_name: music_store_demo
     flavor: m1.medium
-    image: windows-2019-standard-core
+    image: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
     key_name: ansible-oatakan
     volume_size: 30
     nics:
