@@ -74,11 +74,20 @@
     WebAppPool: DefaultAppPool
     PhysicalPath: "{{ iis_site.path }}"
 
+- name: Download application code (<2.9)
+  win_get_url:
+    url: '{{ code_download_url }}'
+    dest: '{{ ansible_env.TEMP }}\app.zip'
+    validate_certs: no
+  when: ansible_version.full is version('2.9', '<')
+
 - name: Download application code
   win_get_url:
     url: '{{ code_download_url }}'
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
+    follow_redirects: all
+  when: ansible_version.full is version('2.9', '>=')
 
 - name: Ensure iis service is stopped
   win_dsc:
