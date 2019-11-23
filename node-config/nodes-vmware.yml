@@ -24,11 +24,6 @@ nodes:
     template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
     snapshot_src: Linked
     linked_clone: True
-    customvalues:
-      - key: app_name
-        value: music_store_demo
-      - key: role
-        value: sql_server
     customization:
       autologon: True
       orgname: Ansible
