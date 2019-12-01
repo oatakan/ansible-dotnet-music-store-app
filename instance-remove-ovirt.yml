@@ -12,3 +12,4 @@
     - role: ansible-role-ovirt
       role_action: deprovision
       delegate_to: localhost
+      run_once: yes

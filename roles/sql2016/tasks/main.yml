@@ -5,7 +5,7 @@
     name: "{{ item }}"
     state: present
   loop:
-    - xNetworking
+    - NetworkingDsc
     - SqlServerDsc
 
 - name: set up sqladmin user
@@ -101,7 +101,7 @@
 
 - name: Open port for MSSQL
   win_dsc:
-    resource_name: xFirewall
+    resource_name: Firewall
     ensure: Present
     name: MSSQL
     enabled: True
