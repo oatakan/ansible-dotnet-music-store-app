@@ -24,8 +24,6 @@
     ansible_connection: winrm
     ansible_winrm_transport: credssp
     ansible_winrm_server_cert_validation: ignore
-    default_release_download_url: https://github.com/oatakan/MusicStore/releases/download/rel%2F{{ app_version }}/music-store-rel-{{ app_version }}.zip
-    code_download_url: '{{ tower_webhook_payload.release.zipball_url | default(default_release_download_url) }}'
 
   pre_tasks:
 
