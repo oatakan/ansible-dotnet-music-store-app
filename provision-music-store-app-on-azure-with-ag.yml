@@ -1,4 +1,4 @@
-- import_playbook: provision-music-store-app.yml
+#- import_playbook: provision-music-store-app.yml
 
 - name: set up app gateway and add nodes
   hosts: '*iis'

@@ -11,6 +11,6 @@ app_name: test_app
 
 subdomain: test
 
-include_group: tag_role_iis
+include_group: role_iis
 
 role_action: provision
