@@ -136,7 +136,7 @@
     validate_certs: no
   register: response
   until: response.content is defined and site_title in response.content
-  retries: 10
+  retries: 30
   delay: 1
   ignore_errors: yes
 
