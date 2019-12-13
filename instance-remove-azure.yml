@@ -1,3 +1,12 @@
+- name: Remove music store app
+  hosts: '*iis'
+  gather_facts: no
+  become: no
+  roles:
+    - role: azure_app_gateway
+      role_action: deprovision
+      ignore_errors: yes
+
 - name: Remove Windows Instances
   hosts: all
   gather_facts: False
