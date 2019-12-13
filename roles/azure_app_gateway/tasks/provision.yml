@@ -86,7 +86,19 @@
   register: azure_ag
   delegate_to: 127.0.0.1
 
+- name: get public ip info
+  azure_rm_publicipaddress_info:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+  register: ip_ag_public_ip_info
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- debug:
+    var: ip_ag_public_ip_info
+  run_once: yes
+
 - name: output url
   debug:
-    msg: "application is available at http://{{ ip_ag_public_ip.state.ip_address }}/"
+    msg: "application is available at http://{{ ip_ag_public_ip.publicipaddresses[0].ip_address }}/"
   run_once: yes
