@@ -48,11 +48,11 @@
       capacity: 2
     gateway_ip_configurations:
       - subnet:
-          id: "{{ azure_subnet_ag.id }}"
+          id: "{{ azure_subnet_ag.state.id }}"
         name: ag_ip_config_{{ azure_prefix }}
     frontend_ip_configurations:
       - subnet:
-          id: "{{ azure_subnet_ag.id }}"
+          id: "{{ azure_subnet_ag.state.id }}"
         name: ag_frontend_ip_config_{{ azure_prefix }}
     frontend_ports:
       - port: 80
