@@ -15,7 +15,7 @@
 
 - name: set targets from list
   set_fact:
-    backend_addresses: "{{ instance_ids|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
+    backend_addresses: "{{ backend_addresses|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
   with_items:
     - "{{ groups[instance_group] }}"
   run_once: yes
