@@ -24,15 +24,15 @@
     var: backend_addresses
   run_once: yes
 
-- name: ensure subnet exists
-  azure_rm_subnet:
-    resource_group: "{{ azure_resource_group_name }}"
-    name: "{{ azure_subnet_ag_name }}"
-    address_prefix: "{{ azure_subnet_ag_prefixes }}"
-    virtual_network: "{{ azure_virtual_network_name }}"
-  run_once: yes
-  register: azure_subnet_ag
-  delegate_to: 127.0.0.1
+#- name: ensure subnet exists
+#  azure_rm_subnet:
+#    resource_group: "{{ azure_resource_group_name }}"
+#    name: "{{ azure_subnet_ag_name }}"
+#    address_prefix: "{{ azure_subnet_ag_prefixes }}"
+#    virtual_network: "{{ azure_virtual_network_name }}"
+#  run_once: yes
+#  register: azure_subnet_ag
+#  delegate_to: 127.0.0.1
 
 - name: ensure public IP address exists
   azure_rm_publicipaddress:
@@ -59,9 +59,7 @@
           id: "{{ azure_subnet_ag.state.id }}"
         name: ag_ip_config_{{ azure_prefix }}
     frontend_ip_configurations:
-      - subnet:
-          id: "{{ azure_subnet_ag.state.id }}"
-        public_ip_address: "{{ azure_public_ip_ag_name }}"
+      - public_ip_address: "{{ azure_public_ip_ag_name }}"
         name: ag_frontend_ip_config_{{ azure_prefix }}
     frontend_ports:
       - port: 80
