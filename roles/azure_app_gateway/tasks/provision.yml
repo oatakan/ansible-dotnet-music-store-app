@@ -37,7 +37,6 @@
 - name: ensure public IP address exists
   azure_rm_publicipaddress:
     resource_group: "{{ azure_resource_group_name }}"
-    allocation_method: Static
     name: "{{ azure_public_ip_ag_name }}"
   register: ip_ag_public_ip
   run_once: yes
