@@ -40,6 +40,8 @@
     allocation_method: Static
     name: "{{ azure_public_ip_ag_name }}"
   register: ip_ag_public_ip
+  run_once: yes
+  delegate_to: 127.0.0.1
 
 - debug:
     var: ip_ag_public_ip
