@@ -6,5 +6,12 @@
     name: "ag_{{ azure_prefix }}"
     state: absent
   run_once: yes
-  register: azure_ag
+  delegate_to: 127.0.0.1
+
+- name: remove subnet
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_subnet_ag_name }}"
+    state: absent
+  run_once: yes
   delegate_to: 127.0.0.1

@@ -24,14 +24,19 @@
     var: backend_addresses
   run_once: yes
 
-- name: get subnet details
-  azure_rm_subnet_info:
+- name: create subnet
+  azure_rm_subnet:
     resource_group: "{{ azure_resource_group_name }}"
-    virtual_network_name: "{{ azure_virtual_network_name }}"
-    name: "{{ azure_subnet_name }}"
+    name: "{{ azure_subnet_ag_name }}"
+    address_prefix: "{{ azure_subnet_ag_prefixes }}"
+    virtual_network: "{{ azure_virtual_network_name }}"
   run_once: yes
-  register: azure_subnet
+  register: azure_subnet_ag
   delegate_to: 127.0.0.1
+
+- debug:
+    var: azure_subnet_ag
+  run_once: yes
 
 - name: create instance of Application Gateway
   azure_rm_appgateway:
@@ -43,11 +48,11 @@
       capacity: 2
     gateway_ip_configurations:
       - subnet:
-          id: "{{  azure_subnet.subnets[0].id }}"
+          id: "{{ azure_subnet_ag.id }}"
         name: ag_ip_config_{{ azure_prefix }}
     frontend_ip_configurations:
       - subnet:
-          id: "{{  azure_subnet.subnets[0].id }}"
+          id: "{{ azure_subnet_ag.id }}"
         name: ag_frontend_ip_config_{{ azure_prefix }}
     frontend_ports:
       - port: 80
