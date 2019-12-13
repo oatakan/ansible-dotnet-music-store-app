@@ -100,5 +100,5 @@
 
 - name: output url
   debug:
-    msg: "application is available at http://{{ ip_ag_public_ip.publicipaddresses[0].ip_address }}/"
+    msg: "application is available at http://{{ ip_ag_public_ip_info.publicipaddresses[0].ip_address }}/"
   run_once: yes
