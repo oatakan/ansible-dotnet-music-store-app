@@ -21,3 +21,4 @@
     - role: ansible-role-azure
       role_action: deprovision
       delegate_to: localhost
+      run_once: yes
