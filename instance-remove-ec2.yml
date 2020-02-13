@@ -11,19 +11,8 @@
   become: no
   gather_facts: no
   tasks:
-#    - name: get ec2 instance information (<2.9)
-#      ec2_instance_facts:
-#        region: "{{ ec2_region }}"
-#        filters:
-#          vpc-id: "{{ ec2_vpc_id }}"
-#          "tag:app": music_store_demo
-#      register: ec2_instances
-#      delegate_to: localhost
-#      run_once: yes
-#      when: ansible_version.full is version('2.9', '<')
-
-    - name: get ec2 instance information
-      ec2_instance_info:
+    - name: get ec2 instance information (<2.9)
+      ec2_instance_facts:
         region: "{{ ec2_region }}"
         filters:
           vpc-id: "{{ ec2_vpc_id }}"
@@ -31,7 +20,18 @@
       register: ec2_instances
       delegate_to: localhost
       run_once: yes
-      when: ansible_version.full is version('2.9', '>=')
+      when: ansible_version.full is version('2.9', '<')
+
+#    - name: get ec2 instance information
+#      ec2_instance_info:
+#        region: "{{ ec2_region }}"
+#        filters:
+#          vpc-id: "{{ ec2_vpc_id }}"
+#          "tag:app": music_store_demo
+#      register: ec2_instances
+#      delegate_to: localhost
+#      run_once: yes
+#      when: ansible_version.full is version('2.9', '>=')
 
     - name: terminate instances
       ec2:
