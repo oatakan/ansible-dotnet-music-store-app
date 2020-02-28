@@ -53,6 +53,10 @@
     image_path: "{{ iso_path }}"
     state: present
   register: disk_image_out
+  until: disk_image_out is success
+  delay: 3
+  retries: 5
+
 
 - name: install SQL 2016
   win_dsc:
