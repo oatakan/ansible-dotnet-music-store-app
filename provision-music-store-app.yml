@@ -1,10 +1,5 @@
 - name: install sql server
   hosts: '*sql_server'
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
   pre_tasks:
     - name: set ad server ip
       add_host:
@@ -18,11 +13,6 @@
 
 - name: install music store app
   hosts: '*iis'
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
   pre_tasks:
     - name: set ip address of sql server
       set_fact:

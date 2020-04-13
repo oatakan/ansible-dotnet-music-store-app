@@ -2,11 +2,6 @@
 
 - name: get sql server details
   hosts: '*sql_server'
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
   pre_tasks:
     - name: set ad server ip
       add_host:
@@ -19,11 +14,6 @@
 - name: rolling update
   hosts: '*iis'
   serial: "50%"
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
 
   pre_tasks:
 
