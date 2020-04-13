@@ -1,6 +1,10 @@
+---
+
+iis_port: 80
+
 iis_site:
   name: MusicStore
-  port: 80
+  port: "{{ iis_port }}"
   path: C:\sites\musicstore
 
 site_title: "Music Store (Powered by Ansible)"

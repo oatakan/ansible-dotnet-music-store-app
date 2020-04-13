@@ -131,7 +131,7 @@
 
 - name: proper response from iis is received
   win_uri:
-    url: http://{{ ansible_host }}/
+    url: '{{ application_url }}'
     return_content: yes
     validate_certs: no
   register: response
@@ -142,5 +142,5 @@
 
 - name: output url
   debug:
-    msg: 'application is available at http://{{ ansible_host }}/'
+    msg: 'application is available at {{ application_url }}/'
   when: response is success
