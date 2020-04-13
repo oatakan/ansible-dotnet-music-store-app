@@ -1,10 +1,10 @@
 - name: install sql server
   hosts: '*sql_server'
   pre_tasks:
-    - name: set ad server ip
+    - name: set sql server ip
       add_host:
         name: sql_server
-        ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
+        ip_address:  "{{ ansible_private_ip | default(ansible_ip_addresses[0]) | default(ansible_host) | default(ansible_ssh_host) }}"
 
     - debug:
         var: hostvars['sql_server']['ip_address']
