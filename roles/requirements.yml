@@ -11,7 +11,7 @@
 - src: https://github.com/oatakan/ansible-role-ovirt
   version: origin/master
 
-- src: https://github.com/oatakan/ansible-role-ovirt
+- src: https://github.com/oatakan/ansible-role-kubevirt
   version: origin/master
 
 - src: https://github.com/oatakan/ansible-role-openstack
