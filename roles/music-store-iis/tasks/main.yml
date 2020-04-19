@@ -142,5 +142,5 @@
 
 - name: output url
   debug:
-    msg: 'application is available at {{ application_url }}/'
+    msg: 'application is available at {{ application_url }}'
   when: response is success
