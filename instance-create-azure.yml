@@ -9,4 +9,5 @@
     - node-config/nodes-azure.yml
 
   roles:
-  - ansible-role-azure
+  - role: ansible-role-azure
+    use_availability_set: yes
