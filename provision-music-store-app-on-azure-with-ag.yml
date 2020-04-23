@@ -4,5 +4,7 @@
   hosts: '*iis'
   become: no
   gather_facts: no
+  vars:
+    azure_lb_type: app_gateway
   roles:
-    - azure_app_gateway
+    - azure_{{ azure_lb_type }}
