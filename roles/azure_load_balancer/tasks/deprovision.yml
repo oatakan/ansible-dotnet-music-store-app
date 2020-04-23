@@ -8,6 +8,15 @@
   run_once: yes
   delegate_to: 127.0.0.1
 
+- name: ensure availability set is removed
+  azure_rm_availabilityset:
+    name: "{{ azure_availability_set }}"
+    location: "{{ azure_location }}"
+    resource_group: "{{ azure_resource_group_name }}"
+    state: absent
+  run_once: yes
+  delegate_to: 127.0.0.1
+
 - name: ensure public IP address is removed
   azure_rm_publicipaddress:
     resource_group: "{{ azure_resource_group_name }}"

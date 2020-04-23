@@ -4,6 +4,23 @@
     msg: "number of hosts in this group: {{ groups[instance_group]|length }}"
   run_once: yes
 
+- name: ensure availability set exists
+  azure_rm_availabilityset:
+    name: "{{ azure_availability_set }}"
+    location: "{{ azure_location }}"
+    resource_group: "{{ azure_resource_group_name }}"
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- name: add web server vms to the same availability set
+  azure_rm_virtualmachine:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ hostvars[item].name }}"
+    availability_set: "{{ azure_availability_set }}"
+  loop: "{{ groups[instance_group] | default([]) }}"
+  run_once: yes
+  delegate_to: 127.0.0.1
+
 - name: initialize instance ids
   set_fact:
     backend_addresses: []
