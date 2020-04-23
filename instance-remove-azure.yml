@@ -2,8 +2,10 @@
   hosts: '*iis'
   gather_facts: no
   become: no
+  vars:
+    azure_lb_type: app_gateway
   roles:
-    - role: azure_app_gateway
+    - role: azure_{{ azure_lb_type }}
       role_action: deprovision
       ignore_errors: yes
 
