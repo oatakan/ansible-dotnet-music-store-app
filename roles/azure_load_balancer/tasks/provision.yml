@@ -77,12 +77,12 @@
 - name: update network interfaces to point to lb backend address pool
   azure_rm_networkinterface:
     resource_group: "{{ azure_resource_group_name }}"
-    name: "ni_{{ azure_prefix }}{{ hostvars[item].ansible_host }}"
+    name: "{{ hostvars[item].network_interface }}"
     virtual_network: "vn_{{ azure_prefix }}"
     subnet: "sn_{{ azure_prefix }}"
     ip_configurations:
       - name: ipconfig1
-        public_ip_address_name: ip_{{ azure_prefix }}{{ item.name }}
+        public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
         primary: True
       - name: ipconfig2
         load_balancer_backend_address_pools:
