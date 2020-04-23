@@ -54,8 +54,7 @@
       - public_ip_address: "{{ azure_public_ip_ag_name }}"
         name: ag_frontend_ip_config_{{ azure_prefix }}
     backend_address_pools:
-      - backend_addresses: "{{ backend_addresses }}"
-        name: ag_backend_address_pool_{{ azure_prefix }}
+      - name: ag_backend_address_pool_{{ azure_prefix }}
     probes:
      - name: probe0
        port: 80
@@ -73,6 +72,24 @@
   run_once: yes
   register: azure_ag
   delegate_to: 127.0.0.1
+
+# update virtual network interfaces to include load balancer pool
+- name: update network interface
+  azure_rm_networkinterface:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "ni_{{ azure_prefix }}{{ item.name }}"
+    virtual_network: "vn_{{ azure_prefix }}"
+    subnet: "sn_{{ azure_prefix }}"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: ip_{{ azure_prefix }}{{ item.name }}
+        primary: True
+      - name: ipconfig2
+        load_balancer_backend_address_pools:
+          - "{{ azure_ag.state.backend_address_pools[0].id }}"
+    security_group: "sg_{{ azure_prefix }}"
+  loop: "{{ groups[instance_group] | default([]) }}"
+  run_once: yes
 
 - name: get public ip info
   azure_rm_publicipaddress_info:
