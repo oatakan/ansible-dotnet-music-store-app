@@ -77,7 +77,7 @@
 - name: update network interfaces to point to lb backend address pool
   azure_rm_networkinterface:
     resource_group: "{{ azure_resource_group_name }}"
-    name: "ni_{{ azure_prefix }}{{ item.ansible_host }}"
+    name: "ni_{{ azure_prefix }}{{ hostvars[item].ansible_host }}"
     virtual_network: "vn_{{ azure_prefix }}"
     subnet: "sn_{{ azure_prefix }}"
     ip_configurations:
