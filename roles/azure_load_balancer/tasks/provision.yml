@@ -90,6 +90,7 @@
     security_group: "sg_{{ azure_prefix }}"
   loop: "{{ groups[instance_group] | default([]) }}"
   run_once: yes
+  delegate_to: 127.0.0.1
 
 - name: get public ip info
   azure_rm_publicipaddress_info:
