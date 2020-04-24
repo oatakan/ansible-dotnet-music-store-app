@@ -85,6 +85,8 @@
 #        public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
 #        primary: True
       - name: ipconfig1
+        public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
+        primary: True
         load_balancer_backend_address_pools:
           - "{{ azure_ag.state.backend_address_pools[0].id }}"
     security_group: "sg_{{ azure_prefix }}"
