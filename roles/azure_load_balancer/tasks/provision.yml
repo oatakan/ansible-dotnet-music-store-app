@@ -81,9 +81,6 @@
     virtual_network: "vn_{{ azure_prefix }}"
     subnet: "sn_{{ azure_prefix }}"
     ip_configurations:
-#      - name: ipconfig1
-#        public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
-#        primary: True
       - name: ipconfig1
         public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
         primary: True
