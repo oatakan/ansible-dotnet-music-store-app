@@ -23,7 +23,7 @@ nodes:
     cpu: 2
     template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
     snapshot_src: Linked
-    linked_clone: True
+    linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
       autologon: True
       orgname: Ansible
@@ -50,7 +50,7 @@ nodes:
     cpu: 2
     template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
     snapshot_src: Linked
-    linked_clone: True
+    linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
       autologon: True
       orgname: Ansible
