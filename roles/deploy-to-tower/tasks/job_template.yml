@@ -108,6 +108,7 @@
   loop:
     - "{{ reg_mssql_credential }}"
     - "{{ reg_credential_aws_demo }}"
+    - "{{ reg_credential_aws_windows_machine }}"
   when:
     - reg_mssql_credential is defined
     - reg_credential_aws_demo is defined

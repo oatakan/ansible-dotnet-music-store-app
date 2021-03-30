@@ -3,8 +3,8 @@
 - name: get sql server details
   hosts: '*sql_server'
 
-  pre_tasks:
-    - name: set ad server ip
+  tasks:
+    - name: set sql server ip
       add_host:
         name: sql_server
         ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
