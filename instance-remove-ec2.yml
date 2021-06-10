@@ -7,7 +7,7 @@
       ignore_errors: yes
 
 - name: Remove Windows instances
-  hosts: localhost
+  hosts: tag_app_music_store_demo
   become: no
   gather_facts: no
   tasks:
@@ -18,9 +18,13 @@
           vpc-id: "{{ ec2_vpc_id }}"
           "tag:app": music_store_demo
       register: ec2_instances
+      delegate_to: localhost
+      run_once: yes
 
     - name: terminate instances
       ec2:
         region: "{{ ec2_region }}"
         state: "absent"
         instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
+      delegate_to: localhost
+      run_once: yes
