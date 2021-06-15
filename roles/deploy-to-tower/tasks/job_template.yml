@@ -3,9 +3,10 @@
 - name: create aws windows machine credentials
   awx.awx.tower_credential:
     name: aws-windows-machine
-    username: 'Administrator'
-    password: "{{ ansible_ssh_password | default(ansible_password) | default(omit) }}"
-    credential_type: ssh
+    inputs:
+      username: 'Administrator'
+      password: "{{ ansible_ssh_password | default(ansible_password) | default(omit) }}"
+    credential_type: Machine
     organization: Default
     state: present
     tower_host: '{{ tower_host }}'
@@ -17,9 +18,10 @@
 - name: create aws credentials
   awx.awx.tower_credential:
     name: aws-demo
-    username: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default(omit) }}"
-    password: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default(omit) }}"
-    credential_type: aws
+    inputs:
+      username: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default(omit) }}"
+      password: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default(omit) }}"
+    credential_type: Machine
     organization: Default
     security_token: "{{ lookup('env', 'AWS_SECURITY_TOKEN') | default(omit) }}"
     state: present
