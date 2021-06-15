@@ -4,6 +4,8 @@
   hosts: all
   become: no
   gather_facts: no
+  collections:
+    - awx.awx
   pre_tasks:
     - name: testing connection to tower
       tower_job_list:
