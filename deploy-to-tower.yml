@@ -4,6 +4,19 @@
   hosts: all
   become: no
   gather_facts: no
+  pre_tasks:
+    - name: testing connection to tower
+      tower_job_list:
+        tower_host: "{{ lookup('env', 'TOWER_HOST') | default('localhost') }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_verify_ssl: no
+      register: testing_jobs
+      until: testing_jobs is success
+      delay: 3
+      retries: 300
+      delegate_to: localhost
+      run_once: yes
   roles:
     - role: deploy-to-tower
       delegate_to: localhost
