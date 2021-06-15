@@ -11,7 +11,7 @@
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_credential_aws_windows_machine
 
 - name: create aws credentials
@@ -26,7 +26,7 @@
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_credential_aws_demo
 
 - name: create rolling update job template using module
@@ -55,7 +55,7 @@
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_job_template_rolling_update
 
 - name: update job template with extra vars

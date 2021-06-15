@@ -9,7 +9,7 @@
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_tower_inventory_aws_windows_demo
 
 - name: create tower inventory source
@@ -28,5 +28,5 @@
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_tower_inventory_source_aws_windows_demo_source
