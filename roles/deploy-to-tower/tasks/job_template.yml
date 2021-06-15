@@ -1,7 +1,7 @@
 ---
 
 - name: create aws windows machine credentials
-  tower_credential:
+  awx.awx.tower_credential:
     name: aws-windows-machine
     username: 'Administrator'
     password: "{{ ansible_ssh_password | default(ansible_password) | default(omit) }}"
@@ -15,7 +15,7 @@
   register: reg_credential_aws_windows_machine
 
 - name: create aws credentials
-  tower_credential:
+  awx.awx.tower_credential:
     name: aws-demo
     username: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default(omit) }}"
     password: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default(omit) }}"
@@ -30,7 +30,7 @@
   register: reg_credential_aws_demo
 
 - name: create rolling update job template using module
-  tower_job_template:
+  awx.awx.tower_job_template:
     name: Music Store Rolling Update
     description: Music Store Rolling Update
     job_type: run

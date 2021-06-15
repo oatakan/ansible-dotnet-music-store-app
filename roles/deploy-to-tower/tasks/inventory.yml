@@ -1,7 +1,7 @@
 ---
 
 - name: create aws-windows-demo inventory
-  tower_inventory:
+  awx.awx.tower_inventory:
     name: aws-windows-demo
     description: aws-windows-demo
     organization: Default
@@ -13,7 +13,7 @@
   register: reg_tower_inventory_aws_windows_demo
 
 - name: create tower inventory source
-  tower_inventory_source:
+  awx.awx.tower_inventory_source:
     name: aws-windows-demo-source
     description: aws-windows-demo-source
     inventory: aws-windows-demo
