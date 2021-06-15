@@ -5,7 +5,7 @@
     name: aws-windows-machine
     username: 'Administrator'
     password: "{{ ansible_ssh_password | default(ansible_password) | default(omit) }}"
-    kind: ssh
+    credential_type: ssh
     organization: Default
     state: present
     tower_host: '{{ tower_host }}'
@@ -19,7 +19,7 @@
     name: aws-demo
     username: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default(omit) }}"
     password: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default(omit) }}"
-    kind: aws
+    credential_type: aws
     organization: Default
     security_token: "{{ lookup('env', 'AWS_SECURITY_TOKEN') | default(omit) }}"
     state: present
