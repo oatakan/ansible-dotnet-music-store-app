@@ -21,9 +21,18 @@
     source: ec2
     update_on_launch: yes
     overwrite: yes
-    host_filter: "tag:app=music_store_demo"
 #    group_by: tag_keys
 #    source_regions: us-east-1
+    source_vars:
+      regions:
+        - us-east-1
+      filters:
+        'tag:app': music_store_demo
+      keyed_groups:
+        - prefix: tag
+          key: tags
+      compose:
+        ec2_id: instance_id
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
