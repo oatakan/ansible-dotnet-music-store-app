@@ -23,7 +23,7 @@
     overwrite: yes
     host_filter: "tag:app=music_store_demo"
 #    group_by: tag_keys
-    source_regions: us-east-1
+#    source_regions: us-east-1
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
