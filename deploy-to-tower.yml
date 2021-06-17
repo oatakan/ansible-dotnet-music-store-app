@@ -13,7 +13,7 @@
         validate_certs: no
       register: testing_jobs
       until: testing_jobs is success
-      delay: 3
+      delay: 5
       retries: 300
       delegate_to: localhost
       run_once: yes
