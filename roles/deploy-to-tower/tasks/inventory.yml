@@ -21,8 +21,6 @@
     source: ec2
     update_on_launch: yes
     overwrite: yes
-#    group_by: tag_keys
-#    source_regions: us-east-1
     source_vars:
       regions:
         - us-east-1
