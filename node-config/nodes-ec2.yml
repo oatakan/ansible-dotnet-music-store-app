@@ -45,14 +45,3 @@ nodes:
           volume_size: 50
           delete_on_termination: true
     user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
-  - name: winweb4
-    role: iis
-    app_name: music_store_demo
-    instance_type: t2.large
-    image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
-    volumes:
-      - device_name: /dev/xvda
-        ebs:
-          volume_size: 50
-          delete_on_termination: true
-    user_data: "{{ lookup('template', 'templates/userdata.txt.j2') }}"
