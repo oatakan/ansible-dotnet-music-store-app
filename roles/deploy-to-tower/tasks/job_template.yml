@@ -34,4 +34,4 @@
   register: reg_job_template_rolling_update
   until: reg_job_template_rolling_update is success
   delay: 3
-  retries: 30
+  retries: 100
