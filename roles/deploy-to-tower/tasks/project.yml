@@ -16,4 +16,4 @@
   register: reg_project_ansible_dotnet_music_store_app
   until: reg_project_ansible_dotnet_music_store_app is success
   delay: 3
-  retries: 30
+  retries: 100

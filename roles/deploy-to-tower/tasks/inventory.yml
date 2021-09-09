@@ -13,7 +13,7 @@
   register: reg_tower_inventory_aws_windows_demo
   until: reg_tower_inventory_aws_windows_demo is success
   delay: 3
-  retries: 30
+  retries: 100
 
 - name: create tower inventory source
   awx.awx.tower_inventory_source:
@@ -42,4 +42,4 @@
   register: reg_tower_inventory_source_aws_windows_demo_source
   until: reg_tower_inventory_source_aws_windows_demo_source is success
   delay: 3
-  retries: 30
+  retries: 100
