@@ -9,6 +9,7 @@ nodes:
   - name: winsql1
     role: sql_server
     app_name: music_store_demo
+    environment: dev
     networks:
     - name: mgmt
       ip: 192.168.1.53
@@ -36,6 +37,7 @@ nodes:
   - name: winweb1
     role: iis
     app_name: music_store_demo
+    environment: dev
     networks:
     - name: mgmt
       ip: 192.168.1.54
