@@ -7,5 +7,6 @@ collections:
 #   - name: community.kubevirt
   - name: community.okd
   - name: community.vmware
+  = name: community.aws
   - name: awx.awx
     version: 18.0.0
