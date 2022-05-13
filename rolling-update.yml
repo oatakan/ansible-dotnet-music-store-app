@@ -41,7 +41,7 @@
     - name: register instance with load balancer
       community.aws.elb_instance:
         region: "{{ ec2_region | default(placement.region) | default('us-east-1') }}"
-        ec2_elbs: "{{ deregister_instances.updated_elbs }}"
+        ec2_elbs: "{{ deregister_instances.updated_elbs | default(deregister_instances.ansible_facts.ec2_elbs) | default([ec2_name_prefix + '-' + subdomain + '-elb-lb']) }}"
         instance_id: "{{ ec2_id }}"
         state: present
       delegate_to: localhost
