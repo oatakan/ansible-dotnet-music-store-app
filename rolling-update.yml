@@ -28,6 +28,9 @@
         instance_id: "{{ ec2_id }}"
         state: absent
       register: deregister_instances
+      until: deregister_instances is success
+      delay: 3
+      retries: 5
       delegate_to: localhost
       become: no
       vars:
