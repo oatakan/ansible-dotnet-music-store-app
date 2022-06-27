@@ -3,7 +3,7 @@
 - name: overwrite iso_path to local if network share given
   set_fact:
     iso_path: '{{ ansible_env.TEMP }}\sql2016.iso'
-  when: (":" in iso_path)
+  when: iso_path.startswith('\\')
 
 - name: download ISO file
   win_get_url:
