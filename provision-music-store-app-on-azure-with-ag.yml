@@ -1,0 +1,10 @@
+- import_playbook: provision-music-store-app.yml
+
+- name: set up app gateway and add nodes
+  hosts: '*iis'
+  become: no
+  gather_facts: no
+  vars:
+    azure_lb_type: app_gateway
+  roles:
+    - azure_{{ azure_lb_type }}

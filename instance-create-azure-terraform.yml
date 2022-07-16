@@ -1,0 +1,15 @@
+- name: Deploy Windows Servers on azure
+  hosts: all
+  gather_facts: False
+  connection: local
+  become: no
+  vars:
+    ansible_port: 5986
+  vars_files:
+    - node-config/nodes-azure.yml
+
+  tasks:
+    - name: Basic deploy of a service
+      terraform:
+        project_path: '{{ project_dir }}'
+        state: present

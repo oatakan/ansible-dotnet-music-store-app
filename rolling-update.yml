@@ -2,16 +2,11 @@
 
 - name: get sql server details
   hosts: '*sql_server'
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
   pre_tasks:
-    - name: set ad server ip
+    - name: set sql server ip
       add_host:
         name: sql_server
-        ip_address:  "{{ ansible_ip_addresses[0] | default(ansible_host) | default(ansible_ssh_host) }}"
+        ip_address:  "{{ ansible_private_ip | default(private_ip) | default(ansible_ip_addresses[0]) | default(ansible_host) | default(ansible_ssh_host) }}"
 
     - debug:
         var: hostvars['sql_server']['ip_address']
@@ -19,14 +14,8 @@
 - name: rolling update
   hosts: '*iis'
   serial: "50%"
-  vars:
-    ansible_port: 5986
-    ansible_connection: winrm
-    ansible_winrm_transport: credssp
-    ansible_winrm_server_cert_validation: ignore
 
   pre_tasks:
-
     - name: set ip address of sql server
       set_fact:
         sql_server_ip_address: "{{ hostvars['sql_server']['ip_address'] }}"
@@ -34,12 +23,15 @@
         - hostvars['sql_server']['ip_address'] is defined
 
     - name: de-register instance from load balancer
-      local_action:
-        module: ec2_elb
-        region: "{{ ec2_region }}"
-        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+      community.aws.elb_instance:
+        region: "{{ ec2_region | default(placement.region) | default('us-east-1') }}"
         instance_id: "{{ ec2_id }}"
         state: absent
+      register: deregister_instances
+      until: deregister_instances is success
+      delay: 3
+      retries: 5
+      delegate_to: localhost
       become: no
       vars:
         ansible_port: 22
@@ -49,14 +41,13 @@
     - music-store-iis
 
   post_tasks:
-
     - name: register instance with load balancer
-      local_action:
-        module: ec2_elb
-        region: "{{ ec2_region }}"
-        ec2_elbs: "{{ ec2_name_prefix }}-{{ subdomain }}-elb-lb"
+      community.aws.elb_instance:
+        region: "{{ ec2_region | default(placement.region) | default('us-east-1') }}"
+        ec2_elbs: "{{ deregister_instances.updated_elbs | default(deregister_instances.ansible_facts.ec2_elbs) | default([ec2_name_prefix + '-' + subdomain + '-elb-lb']) }}"
         instance_id: "{{ ec2_id }}"
         state: present
+      delegate_to: localhost
       become: no
       vars:
         ansible_port: 22

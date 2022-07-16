@@ -22,7 +22,9 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ infra_template_name|default('windows-2022-standard-core') }}"
+    template: "{{ win2019_template_name|default('windows-2022-standard-core') }}"
+    snapshot_src: Linked
+    linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
       autologon: True
       autologoncount: 1
@@ -31,7 +33,7 @@ nodes:
       timezone: 20
       password: '{{ ansible_password | default(ansible_ssh_password) }}'
       runonce:
-      - powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"
+      - c:\windows\system32\windowspowershell\v1.0\powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://git.io/fNG9x'))) -ForceNewSSLCert -EnableCredSSP"
       - winrm set winrm/config/service/auth @{CredSSP="true"}
   - name: winweb1
     role: iis
@@ -49,7 +51,9 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ infra_template_name|default('windows-2022-standard-core') }}"
+    template: "{{ win2019_template_name|default('windows-2022-standard-core') }}"
+    snapshot_src: Linked
+    linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
       autologon: True
       autologoncount: 1
@@ -58,5 +62,5 @@ nodes:
       timezone: 20
       password: '{{ ansible_password | default(ansible_ssh_password) }}'
       runonce:
-      - powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"
+      - c:\windows\system32\windowspowershell\v1.0\powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://git.io/fNG9x'))) -ForceNewSSLCert -EnableCredSSP"
       - winrm set winrm/config/service/auth @{CredSSP="true"}

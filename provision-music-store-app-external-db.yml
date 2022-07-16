@@ -1,0 +1,12 @@
+---
+
+- name: install music store app
+  hosts: '*iis'
+  pre_tasks:
+    - name: fail if sql_server_ip_address is not specified
+      fail:
+        msg: "please specify sql_server_ip_address"
+      when: sql_server_ip_address is undefined
+      run_once: true
+  roles:
+    - music-store-iis

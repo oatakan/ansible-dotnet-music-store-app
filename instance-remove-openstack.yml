@@ -1,4 +1,4 @@
-- name: Deploy Windows Servers
+- name: Remove Windows Servers
   hosts: all
   gather_facts: False
   connection: local
@@ -10,4 +10,7 @@
     - node-config/nodes-openstack.yml
 
   roles:
-  - ansible-role-os-stack
+    - role: ansible-role-openstack
+      role_action: deprovision
+      delegate_to: localhost
+      run_once: yes

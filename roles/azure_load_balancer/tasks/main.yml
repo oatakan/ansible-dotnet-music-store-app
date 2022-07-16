@@ -1,0 +1,11 @@
+---
+
+- include: provision.yml instance_group='{{ include_group }}'
+  run_once: yes
+  when:
+    - role_action == 'provision'
+    - groups[include_group]|length > 0
+
+- include: deprovision.yml
+  run_once: yes
+  when: role_action == 'deprovision'

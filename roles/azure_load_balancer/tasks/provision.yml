@@ -1,0 +1,109 @@
+---
+
+- debug:
+    msg: "number of hosts in this group: {{ groups[instance_group]|length }}"
+  run_once: yes
+
+- name: initialize instance ids
+  set_fact:
+    backend_addresses: []
+  run_once: yes
+
+- debug:
+    msg: "current group: {{ instance_group }}"
+  run_once: yes
+
+- name: set targets from list
+  set_fact:
+    backend_addresses: "{{ backend_addresses|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
+  with_items:
+    - "{{ groups[instance_group] }}"
+  run_once: yes
+
+- debug:
+    var: backend_addresses
+  run_once: yes
+
+- name: ensure subnet exists
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_subnet_ag_name }}"
+    address_prefix: "{{ azure_subnet_ag_prefixes }}"
+    virtual_network: "{{ azure_virtual_network_name }}"
+  run_once: yes
+  register: azure_subnet_ag
+  delegate_to: 127.0.0.1
+
+- name: ensure public IP address exists
+  azure_rm_publicipaddress:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+  register: ip_ag_public_ip
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- debug:
+    var: ip_ag_public_ip
+  run_once: yes
+
+- name: ensure load balancer exists
+  azure_rm_loadbalancer:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "lb_{{ azure_prefix }}"
+    frontend_ip_configurations:
+      - public_ip_address: "{{ azure_public_ip_ag_name }}"
+        name: ag_frontend_ip_config_{{ azure_prefix }}
+    backend_address_pools:
+      - name: ag_backend_address_pool_{{ azure_prefix }}
+    probes:
+     - name: probe0
+       port: 80
+       protocol: Http
+       interval: 10
+       fail_count: 3
+       request_path: /
+    load_balancing_rules:
+      - name: lbrbalancingrule0
+        frontend_ip_configuration: ag_frontend_ip_config_{{ azure_prefix }}
+        backend_address_pool: ag_backend_address_pool_{{ azure_prefix }}
+        frontend_port: 80
+        backend_port: 80
+        probe: probe0
+  run_once: yes
+  register: azure_ag
+  delegate_to: 127.0.0.1
+
+# update virtual network interfaces to include load balancer pool
+- name: update network interfaces to point to lb backend address pool
+  azure_rm_networkinterface:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ hostvars[item].network_interface }}"
+    virtual_network: "vn_{{ azure_prefix }}"
+    subnet: "sn_{{ azure_prefix }}"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "{{ hostvars[item].public_ip_name }}"
+        primary: True
+        load_balancer_backend_address_pools:
+          - "{{ azure_ag.state.backend_address_pools[0].id }}"
+    security_group: "sg_{{ azure_prefix }}"
+  loop: "{{ groups[instance_group] | default([]) }}"
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- name: get public ip info
+  azure_rm_publicipaddress_info:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+  register: ip_ag_public_ip_info
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- debug:
+    var: ip_ag_public_ip_info
+  run_once: yes
+
+- name: output url
+  debug:
+    msg: "application is available at http://{{ ip_ag_public_ip_info.publicipaddresses[0].ip_address }}/"
+  run_once: yes
