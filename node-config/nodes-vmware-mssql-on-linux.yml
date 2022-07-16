@@ -9,6 +9,10 @@ nodes:
   - name: linsql1
     role: sql_server
     app_name: music_store_demo
+    environment: dev
+    disk:
+      - size_gb: 60
+        autoselect_datastore: yes
     networks:
     - name: mgmt
       ip: 192.168.1.52
@@ -21,15 +25,9 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: centos75-x64-bigdisk_v4
-    snapshot_src: Linked
-    linked_clone: True
-    customvalues:
-      - key: app_name
-        value: music_store_demo
-      - key: role
-        value: sql_server
+    template: "{{ lin_infra_template_name|default('centos79-x64-v1') }}"
     customization:
+      hostname: linsql1
       domain: home.ad
       dns_servers:
       - 8.8.8.8
@@ -38,6 +36,7 @@ nodes:
   - name: winweb1
     role: iis
     app_name: music_store_demo
+    environment: dev
     networks:
     - name: mgmt
       ip: 192.168.1.54
@@ -50,16 +49,10 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-2019-standard-core
-    snapshot_src: Linked
-    linked_clone: True
-    customvalues:
-      - key: app_name
-        value: music_store_demo
-      - key: role
-        value: iis
+    template: "{{ win_infra_template_name|default('windows-2022-standard-core') }}"
     customization:
       autologon: True
+      autologoncount: 1
       orgname: Ansible
       fullname: Ansible
       timezone: 20

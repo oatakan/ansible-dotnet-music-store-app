@@ -1,6 +1,7 @@
 - name: Remove Windows Servers
   hosts: all
-  gather_facts: False
+  gather_facts: false
+  become: false
   connection: local
   vars:
     ansible_ssh_password: ''

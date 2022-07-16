@@ -1,8 +1,8 @@
 - name: Deploy Windows Servers
-  hosts: all
-  gather_facts: False
+  hosts: localhost
+  become: false
+  gather_facts: false
   connection: local
-  become: no
   vars:
     ansible_port: 5986
   vars_files:

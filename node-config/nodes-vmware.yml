@@ -9,6 +9,7 @@ nodes:
   - name: winsql1
     role: sql_server
     app_name: music_store_demo
+    environment: dev
     networks:
     - name: mgmt
       ip: 192.168.1.53
@@ -21,16 +22,10 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-2019-standard-core
-    snapshot_src: Linked
-    linked_clone: True
-    customvalues:
-      - key: app_name
-        value: music_store_demo
-      - key: role
-        value: sql_server
+    template: "{{ infra_template_name|default('windows-2022-standard-core') }}"
     customization:
       autologon: True
+      autologoncount: 1
       orgname: Ansible
       fullname: Ansible
       timezone: 20
@@ -41,6 +36,7 @@ nodes:
   - name: winweb1
     role: iis
     app_name: music_store_demo
+    environment: dev
     networks:
     - name: mgmt
       ip: 192.168.1.54
@@ -53,16 +49,10 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: windows-2019-standard-core
-    snapshot_src: Linked
-    linked_clone: True
-    customvalues:
-      - key: app_name
-        value: music_store_demo
-      - key: role
-        value: iis
+    template: "{{ infra_template_name|default('windows-2022-standard-core') }}"
     customization:
       autologon: True
+      autologoncount: 1
       orgname: Ansible
       fullname: Ansible
       timezone: 20

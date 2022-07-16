@@ -1,8 +1,8 @@
-- name: Deploy Windows Servers
-  hosts: all
-  gather_facts: False
+- name: Deploy Servers
+  hosts: localhost
+  become: false
+  gather_facts: false
   connection: local
-  become: no
   vars_files:
     - node-config/nodes-vmware-mssql-on-linux.yml
 
