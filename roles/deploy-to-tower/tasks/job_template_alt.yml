@@ -1,0 +1,86 @@
+---
+
+- name: create rolling update job template using module
+  awx.awx.tower_job_template:
+    name: Music Store Rolling Update
+    description: Music Store Rolling Update
+    job_type: run
+    inventory: aws-windows-demo
+    project: ansible-dotnet-music-store-app
+    playbook: rolling-update.yml
+    credential: aws-windows-machine
+    limit: tag_app_music_store_demo
+    survey_enabled: yes
+    survey_spec:
+      name: survey
+      description: survey
+      spec:
+        - default: 2.0.0-test1
+          required: true
+          choices: "2.0.0-test1\n2.0.0-test2"
+          variable: app_version
+          question_name: Which version to install?
+          question_description: Select a version from the list
+          type: multiplechoice
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    validate_certs: '{{ tower_verify_ssl }}'
+  register: reg_job_template_rolling_update
+
+- name: update job template with extra vars
+  uri:
+    method: PATCH
+    url: "https://{{ tower_host }}/api/v2/job_templates/{{ reg_job_template_rolling_update.id }}/"
+    user: "{{ tower_username }}"
+    password: "{{ tower_password }}"
+    validate_certs: "{{ tower_verify_ssl|bool }}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    body: "{{ body | to_json }}"
+    body_format: json
+    status_code:
+      - 200
+      - 201
+  ignore_errors: yes
+  vars:
+    body:
+      extra_vars: "{{ job_template_extra_vars | to_json }}"
+  when:
+    - reg_job_template_rolling_update.id is defined
+    - job_template_extra_vars is defined
+
+- debug:
+    var: reg_mssql_credential
+
+- name: update job template with extra credentials
+  uri:
+    method: POST
+    url: "https://{{ tower_host }}/api/v2/job_templates/{{ reg_job_template_rolling_update.id }}/credentials/"
+    user: "{{ tower_username }}"
+    password: "{{ tower_password }}"
+    validate_certs: "{{ tower_verify_ssl|bool }}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"
+    body: "{{ body | to_json }}"
+    body_format: json
+    status_code:
+      - 200
+      - 201
+      - 204
+  ignore_errors: yes
+  vars:
+    body: '{ "id": {{ item.id | int }} }'
+  loop:
+    - "{{ reg_mssql_credential }}"
+    - "{{ reg_credential_aws_demo }}"
+    - "{{ reg_credential_aws_windows_machine }}"
+  when:
+    - reg_mssql_credential is defined
+    - reg_credential_aws_demo is defined
+    - item.id is defined

@@ -1,0 +1,26 @@
+---
+
+- name: ensure Application Gateway is removed
+  azure_rm_appgateway:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "ag_{{ azure_prefix }}"
+    state: absent
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- name: ensure public IP address is removed
+  azure_rm_publicipaddress:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+    state: absent
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- name: ensure subnet is removed
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_subnet_ag_name }}"
+    virtual_network: "{{ azure_virtual_network_name }}"
+    state: absent
+  run_once: yes
+  delegate_to: 127.0.0.1

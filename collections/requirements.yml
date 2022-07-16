@@ -1,0 +1,12 @@
+---
+collections:
+  - name: community.aws
+  - name: kubernetes.core
+    version: 2.1.1
+#   - name: community.kubernetes
+#     version: 1.2.1
+#   - name: community.kubevirt
+  - name: community.okd
+  - name: community.vmware
+  - name: awx.awx
+    version: 18.0.0

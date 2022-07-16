@@ -4,6 +4,22 @@
   hosts: all
   become: no
   gather_facts: no
-  roles:
-    - role: deploy-to-tower
+  tasks:
+    - name: testing connection to tower
+      awx.awx.tower_job_list:
+        tower_host: "{{ lookup('env', 'TOWER_HOST') | default('localhost') }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        validate_certs: no
+      register: testing_jobs
+      until: testing_jobs is success
+      delay: 5
+      retries: 300
       delegate_to: localhost
+      run_once: yes
+
+    - include_role:
+        name: deploy-to-tower
+        apply:
+          delegate_to: localhost
+          become: no

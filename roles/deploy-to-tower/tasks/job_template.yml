@@ -1,48 +1,37 @@
 ---
 
-
-- name: create aws windows machine credentials
-  tower_credential:
-    name: aws-windows-machine
-    username: 'Administrator'
-    password: "{{ ansible_ssh_password | default(ansible_password) | default(omit) }}"
-    kind: ssh
-    organization: Default
-    state: present
-    tower_host: '{{ tower_host }}'
-    tower_username: '{{ tower_username }}'
-    tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
-  register: reg_credential_aws_windows_machine
-
-- name: create aws credentials
-  tower_credential:
-    name: aws-demo
-    username: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default(omit) }}"
-    password: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default(omit) }}"
-    kind: aws
-    organization: Default
-    security_token: "{{ lookup('env', 'AWS_SECURITY_TOKEN') | default(omit) }}"
-    state: present
-    tower_host: '{{ tower_host }}'
-    tower_username: '{{ tower_username }}'
-    tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
-  register: reg_credential_aws_demo
-
-- name: create rolling update job template
-  tower_job_template:
+- name: create rolling update job template using module
+  awx.awx.tower_job_template:
     name: Music Store Rolling Update
+    description: Music Store Rolling Update
     job_type: run
     inventory: aws-windows-demo
     project: ansible-dotnet-music-store-app
     playbook: rolling-update.yml
-    organization: Default
-    credential: aws-windows-machine
+    credentials:
+      - aws-windows-machine
+      - mssql
+      - aws-demo
     limit: tag_app_music_store_demo
+    survey_enabled: yes
+    survey_spec:
+      name: survey
+      description: survey
+      spec:
+        - default: 2.0.0-test1
+          required: true
+          choices: "2.0.0-test1\n2.0.0-test2"
+          variable: app_version
+          question_name: Which version to install?
+          question_description: Select a version from the list
+          type: multiplechoice
+    extra_vars: "{{ job_template_extra_vars | default('') | to_json }}"
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'
     tower_password: '{{ tower_password }}'
-    tower_verify_ssl: '{{ tower_verify_ssl }}'
+    validate_certs: '{{ tower_verify_ssl }}'
   register: reg_job_template_rolling_update
+  until: reg_job_template_rolling_update is success
+  delay: 3
+  retries: 100

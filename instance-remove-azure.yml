@@ -2,8 +2,11 @@
   hosts: '*iis'
   gather_facts: no
   become: no
+  vars:
+    azure_lb_type: app_gateway
   roles:
-    - role: ec2_elb_remove
+    - role: azure_{{ azure_lb_type }}
+      role_action: deprovision
       ignore_errors: yes
 
 - name: Remove Windows Instances
@@ -14,10 +17,11 @@
     ansible_ssh_password: ''
   become: no
   vars_files:
-    - node-config/nodes-ec2.yml
+    - node-config/nodes-azure.yml
 
   roles:
-    - role: ansible-role-ec2
+    - role: ansible-role-azure
       role_action: deprovision
+      use_availability_set: yes
       delegate_to: localhost
       run_once: yes

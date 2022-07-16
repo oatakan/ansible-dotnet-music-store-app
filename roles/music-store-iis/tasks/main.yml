@@ -31,6 +31,7 @@
     resource_name: cChocoPackageInstaller
     Name: dotnetcore-windowshosting
     Ensure: Present
+    Version: 2.2.5
 
 - name: Create site directory structure
   win_dsc:
@@ -73,11 +74,20 @@
     WebAppPool: DefaultAppPool
     PhysicalPath: "{{ iis_site.path }}"
 
+- name: Download application code (<2.9)
+  win_get_url:
+    url: '{{ code_download_url }}'
+    dest: '{{ ansible_env.TEMP }}\app.zip'
+    validate_certs: no
+  when: ansible_version.full is version('2.9', '<')
+
 - name: Download application code
   win_get_url:
     url: '{{ code_download_url }}'
     dest: '{{ ansible_env.TEMP }}\app.zip'
     validate_certs: no
+    follow_redirects: all
+  when: ansible_version.full is version('2.9', '>=')
 
 - name: Ensure iis service is stopped
   win_dsc:
@@ -121,16 +131,16 @@
 
 - name: proper response from iis is received
   win_uri:
-    url: http://{{ ansible_host }}/
+    url: '{{ application_url }}'
     return_content: yes
     validate_certs: no
   register: response
-  until: site_title in response.content
-  retries: 10
+  until: response.content is defined and site_title in response.content
+  retries: 30
   delay: 1
   ignore_errors: yes
 
 - name: output url
   debug:
-    msg: 'application is available at http://{{ ansible_host }}/'
+    msg: 'application is available at {{ application_url }}'
   when: response is success

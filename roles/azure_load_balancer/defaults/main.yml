@@ -1,0 +1,19 @@
+---
+
+azure_prefix: DEMO
+azure_location: southcentralus
+azure_resource_group_name: rg_{{ azure_prefix }}
+azure_virtual_network_name: vn_{{ azure_prefix }}
+azure_subnet_ag_name: sn_ag_{{ azure_prefix }}
+azure_subnet_ag_prefixes: "10.0.2.0/24"
+azure_public_ip_ag_name: ip_ag_{{ azure_prefix }}
+azure_availability_set: as_{{ azure_prefix }}
+
+role_name: lb_role
+app_name: test_app
+
+subdomain: test
+
+include_group: role_iis
+
+role_action: provision
