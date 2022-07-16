@@ -1,0 +1,88 @@
+---
+
+- name: get sql server details
+  hosts: '*sql_server'
+
+  tasks:
+    - name: set sql server ip
+      add_host:
+        name: sql_server
+        ip_address:  "{{ ansible_private_ip | default(private_ip) | default(ansible_ip_addresses[0]) | default(ansible_host) | default(ansible_ssh_host) }}"
+
+    - debug:
+        var: hostvars['sql_server']['ip_address']
+
+- name: rolling update
+  hosts: '*iis'
+  serial: "50%"
+  vars:
+    azure_prefix: DEMO
+    azure_resource_group_name: rg_{{ azure_prefix }}
+
+  pre_tasks:
+
+    - name: set ip address of sql server
+      set_fact:
+        sql_server_ip_address: "{{ hostvars['sql_server']['ip_address'] }}"
+      when:
+        - hostvars['sql_server']['ip_address'] is defined
+      run_once: yes
+
+    - name: set targets from list
+      set_fact:
+        backend_removed_list: "{{ backend_removed_list|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
+      with_items:
+        - "{{ groups['role_iis'] | difference(play_hosts) }}"
+      run_once: yes
+
+    - debug:
+        var: backend_removed_list
+      run_once: yes
+
+    - name: ensure systems are taken out of Application Gateway pool
+      azure_rm_appgateway:
+        resource_group: "{{ azure_resource_group_name }}"
+        name: "ag_{{ azure_prefix }}"
+        sku:
+          name: standard_small
+          tier: standard
+          capacity: 2
+        backend_address_pools:
+          - backend_addresses: "{{ backend_removed_list }}"
+            name: ag_backend_address_pool_{{ azure_prefix }}
+      delegate_to: localhost
+      become: no
+      vars:
+        ansible_connection: local
+      run_once: yes
+
+  roles:
+    - music-store-iis
+
+  post_tasks:
+
+    - name: set targets from list
+      set_fact:
+        backend_added_list: "{{ backend_added_list|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
+      with_items:
+        - "{{ groups['role_iis'] + [inventory_hostname] }}"
+
+    - debug:
+        var: backend_added_list
+
+    - name: ensure systems are taken out of Application Gateway pool
+      azure_rm_appgateway:
+        resource_group: "{{ azure_resource_group_name }}"
+        name: "ag_{{ azure_prefix }}"
+        sku:
+          name: standard_small
+          tier: standard
+          capacity: 2
+        backend_address_pools:
+          - backend_addresses: "{{ backend_added_list }}"
+            name: ag_backend_address_pool_{{ azure_prefix }}
+      delegate_to: localhost
+      become: no
+      vars:
+        ansible_connection: local
+

@@ -1,0 +1,23 @@
+---
+
+nodes:
+  - name: winsql3
+    role: sql_server
+    app_name: music_store_demo
+    domain: home.ad
+    memory: 4096
+    cpu: 2
+    ports:
+      - port: 1433
+    user_name: vagrant
+    template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
+  - name: winweb3
+    role: iis
+    app_name: music_store_demo
+    domain: home.ad
+    memory: 4096
+    cpu: 2
+    ports:
+      - port: 80
+    user_name: vagrant
+    template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"

@@ -1,0 +1,5 @@
+---
+
+external_port: "{{ kube_service_ports['svc-' + iis_port|string] | default(iis_port) }}"
+
+application_url: http://{{ ansible_host }}:{{ external_port }}/

@@ -1,0 +1,43 @@
+---
+
+nodes:
+  - name: winsql1
+    role: sql_server
+    app_name: music_store_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: 2019-Datacenter-Core-smalldisk
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer
+  - name: winweb1
+    role: iis
+    app_name: music_store_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: 2019-Datacenter-Core-smalldisk
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer
+  - name: winweb2
+    role: iis
+    app_name: music_store_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: "{{ win2019_image_sku|default('2019-Datacenter-Core-smalldisk') }}"
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer
+  - name: winweb3
+    role: iis
+    app_name: music_store_demo
+    vm_size: Standard_D2s_v3
+    os_type: Windows
+    image:
+      sku: "{{ win2019_image_sku|default('2019-Datacenter-Core-smalldisk') }}"
+      publisher: MicrosoftWindowsServer
+      version: latest
+      offer: WindowsServer

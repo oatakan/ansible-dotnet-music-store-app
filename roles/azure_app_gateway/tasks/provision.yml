@@ -1,0 +1,104 @@
+---
+
+- debug:
+    msg: "number of hosts in this group: {{ groups[instance_group]|length }}"
+  run_once: yes
+
+- name: initialize instance ids
+  set_fact:
+    backend_addresses: []
+  run_once: yes
+
+- debug:
+    msg: "current group: {{ instance_group }}"
+  run_once: yes
+
+- name: set targets from list
+  set_fact:
+    backend_addresses: "{{ backend_addresses|default([]) + [ {'ip_address': hostvars[item].ansible_host} ] }}"
+  with_items:
+    - "{{ groups[instance_group] }}"
+  run_once: yes
+
+- debug:
+    var: backend_addresses
+  run_once: yes
+
+- name: ensure subnet exists
+  azure_rm_subnet:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_subnet_ag_name }}"
+    address_prefix: "{{ azure_subnet_ag_prefixes }}"
+    virtual_network: "{{ azure_virtual_network_name }}"
+  run_once: yes
+  register: azure_subnet_ag
+  delegate_to: 127.0.0.1
+
+- name: ensure public IP address exists
+  azure_rm_publicipaddress:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+  register: ip_ag_public_ip
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- debug:
+    var: ip_ag_public_ip
+  run_once: yes
+
+- name: ensure Application Gateway exists
+  azure_rm_appgateway:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "ag_{{ azure_prefix }}"
+    sku:
+      name: standard_small
+      tier: standard
+      capacity: 2
+    gateway_ip_configurations:
+      - subnet:
+          id: "{{ azure_subnet_ag.state.id }}"
+        name: ag_ip_config_{{ azure_prefix }}
+    frontend_ip_configurations:
+      - public_ip_address: "{{ azure_public_ip_ag_name }}"
+        name: ag_frontend_ip_config_{{ azure_prefix }}
+    frontend_ports:
+      - port: 80
+        name: ag_frontend_port_{{ azure_prefix }}
+    backend_address_pools:
+      - backend_addresses: "{{ backend_addresses }}"
+        name: ag_backend_address_pool_{{ azure_prefix }}
+    backend_http_settings_collection:
+      - port: 80
+        protocol: http
+        cookie_based_affinity: enabled
+        name: ag_backend_http_settings_{{ azure_prefix }}
+    http_listeners:
+      - frontend_ip_configuration: ag_frontend_ip_config_{{ azure_prefix }}
+        frontend_port: ag_frontend_port_{{ azure_prefix }}
+        name: ag_http_listeners_{{ azure_prefix }}
+    request_routing_rules:
+      - rule_type: Basic
+        backend_address_pool: ag_backend_address_pool_{{ azure_prefix }}
+        backend_http_settings: ag_backend_http_settings_{{ azure_prefix }}
+        http_listener: ag_http_listeners_{{ azure_prefix }}
+        name: ag_request_routing_rule1_{{ azure_prefix }}
+  run_once: yes
+  register: azure_ag
+  delegate_to: 127.0.0.1
+
+- name: get public ip info
+  azure_rm_publicipaddress_info:
+    resource_group: "{{ azure_resource_group_name }}"
+    name: "{{ azure_public_ip_ag_name }}"
+  register: ip_ag_public_ip_info
+  run_once: yes
+  delegate_to: 127.0.0.1
+
+- debug:
+    var: ip_ag_public_ip_info
+  run_once: yes
+
+- name: output url
+  debug:
+    msg: "application is available at http://{{ ip_ag_public_ip_info.publicipaddresses[0].ip_address }}/"
+  run_once: yes

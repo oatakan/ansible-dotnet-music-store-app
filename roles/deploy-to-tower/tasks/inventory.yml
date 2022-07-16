@@ -1,0 +1,45 @@
+---
+
+- name: create aws-windows-demo inventory
+  awx.awx.tower_inventory:
+    name: aws-windows-demo
+    description: aws-windows-demo
+    organization: Default
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    validate_certs: '{{ tower_verify_ssl }}'
+  register: reg_tower_inventory_aws_windows_demo
+  until: reg_tower_inventory_aws_windows_demo is success
+  delay: 3
+  retries: 100
+
+- name: create tower inventory source
+  awx.awx.tower_inventory_source:
+    name: aws-windows-demo-source
+    description: aws-windows-demo-source
+    inventory: aws-windows-demo
+    credential: aws-demo
+    source: ec2
+    update_on_launch: yes
+    overwrite: yes
+    source_vars:
+      regions:
+        - us-east-1
+      filters:
+        'tag:app': music_store_demo
+      keyed_groups:
+        - prefix: tag
+          key: tags
+      compose:
+        ec2_id: instance_id
+    state: present
+    tower_host: '{{ tower_host }}'
+    tower_username: '{{ tower_username }}'
+    tower_password: '{{ tower_password }}'
+    validate_certs: '{{ tower_verify_ssl }}'
+  register: reg_tower_inventory_source_aws_windows_demo_source
+  until: reg_tower_inventory_source_aws_windows_demo_source is success
+  delay: 3
+  retries: 100
