@@ -22,7 +22,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
+    template: "{{ win2019_template_name|default('windows-2022-standard-core') }}"
     snapshot_src: Linked
     linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
@@ -51,7 +51,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ win2019_template_name|default('windows-2019-standard-core') }}"
+    template: "{{ win2019_template_name|default('windows-2022-standard-core') }}"
     snapshot_src: Linked
     linked_clone: "{{ infra_linked_clone|default(True) }}"
     customization:
