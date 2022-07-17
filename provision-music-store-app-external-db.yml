@@ -2,6 +2,11 @@
 
 - name: install music store app
   hosts: '*iis'
+  vars:
+    ansible_port: 5986
+    ansible_connection: winrm
+    ansible_winrm_transport: credssp
+    ansible_winrm_server_cert_validation: ignore
   pre_tasks:
     - name: fail if sql_server_ip_address is not specified
       fail:
