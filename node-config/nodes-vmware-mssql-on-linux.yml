@@ -25,7 +25,7 @@ nodes:
     domain: home.ad
     memory: 4096
     cpu: 2
-    template: "{{ lin_infra_template_name|default('centos79-x64-v1') }}"
+    template: "{{ lin_infra_template_name|default('rocky86-x64-v1') }}"
     customization:
       hostname: linsql1
       domain: home.ad
