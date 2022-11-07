@@ -1,11 +1,11 @@
 ---
 
-- name: deploy to tower
+- name: deploy to aap
   hosts: all
   become: no
   gather_facts: no
   tasks:
-    - name: testing connection to tower
+    - name: testing connection to controller
       awx.awx.tower_job_list:
         tower_host: "{{ lookup('env', 'TOWER_HOST') | default('localhost') }}"
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
@@ -19,7 +19,7 @@
       run_once: yes
 
     - include_role:
-        name: deploy-to-tower
+        name: deploy-to-aap
         apply:
           delegate_to: localhost
           become: no

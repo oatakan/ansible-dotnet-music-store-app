@@ -5,7 +5,7 @@ nodes:
     role: sql_server
     app_name: music_store_demo
     instance_type: t2.large
-    image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
+    image: "{{ ec2_ami_ids['win2019']|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
         ebs:
@@ -16,7 +16,7 @@ nodes:
     role: iis
     app_name: music_store_demo
     instance_type: t2.large
-    image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
+    image: "{{ ec2_ami_ids['win2019']|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
         ebs:
@@ -27,7 +27,7 @@ nodes:
     role: iis
     app_name: music_store_demo
     instance_type: t2.large
-    image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
+    image: "{{ ec2_ami_ids['win2019']|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
         ebs:
@@ -38,7 +38,7 @@ nodes:
     role: iis
     app_name: music_store_demo
     instance_type: t2.large
-    image: "{{ win2019_ami_id|default('ami-0105e6d241a21e66f') }}" #windows 2019
+    image: "{{ ec2_ami_ids['win2019']|default('ami-0105e6d241a21e66f') }}" #windows 2019
     volumes:
       - device_name: /dev/xvda
         ebs:
