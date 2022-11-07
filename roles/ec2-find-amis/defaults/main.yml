@@ -1,8 +1,9 @@
-image_names:
-  rhel-74: RHEL-7.4_HVM_GA-20170808-x86_64-2-Hourly2-GP2
-  rhel-75: RHEL-7.5_HVM_GA-20180322-x86_64-1-Hourly2-GP2
-  rhel-76: "RHEL-7.6_HVM_GA*"
-  centos-75: CentOS Linux 7 x86_64 HVM EBS ENA 1805_01
-  win-2016: "Windows_Server-2016-English-Core-Base*"
-  win-2019: "Windows_Server-2019-English-Core-Base*"
+ec2_image_names:
+  rhel7: "RHEL-7.8_HVM_GA*x86_64*"
+  rhel8: "RHEL-8.6.0_HVM*x86_64*"
+  rhel9: "RHEL-9.0.0_HVM*x86_64*"
+  centos8: "CentOS 8.4*x86_64"
+  win2016: "Windows_Server-2016-English-Core-Base*"
+  win2019: "Windows_Server-2019-English-Core-Base*"
+  win2022: "Windows_Server-2022-English-Core-Base*"
 ec2_region: us-east-1
