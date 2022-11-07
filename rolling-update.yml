@@ -16,6 +16,7 @@
   serial: "50%"
   vars:
     ec2_name_prefix: demo
+    subdomain: demo
 
   pre_tasks:
     - name: set ip address of sql server
