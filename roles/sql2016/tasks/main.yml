@@ -1,12 +1,26 @@
 ---
 
-- name: Install required DSC modules
-  win_psmodule:
-    name: "{{ item }}"
-    state: present
-  loop:
-    - NetworkingDsc
-    - SqlServerDsc
+- block:
+    - name: Install required DSC modules
+      win_psmodule:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - NetworkingDsc
+        - SqlServerDsc
+  rescue:
+    - name: Install Latest Version of PowershellGet
+      ansible.windows.win_shell: |
+        $ErrorActionPreference = 'Stop'
+        Install-Module -Name 'PowerShellGet' -Repository 'PSGallery' -Scope 'AllUsers' -AllowClobber -Force -Confirm:$false
+
+    - name: Install required DSC modules
+      win_psmodule:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - NetworkingDsc
+        - SqlServerDsc
 
 - name: set up sqladmin user
   win_user:
