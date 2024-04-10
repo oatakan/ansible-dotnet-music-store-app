@@ -25,7 +25,7 @@
           question_name: Which version to install?
           question_description: Select a version from the list
           type: multiplechoice
-    extra_vars: "{{ job_template_extra_vars | to_json }}"
+    extra_vars: "{{ job_template_extra_vars | default('') | to_json }}"
     state: present
     tower_host: '{{ tower_host }}'
     tower_username: '{{ tower_username }}'

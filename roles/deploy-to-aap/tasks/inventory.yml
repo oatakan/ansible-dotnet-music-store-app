@@ -15,7 +15,7 @@
   delay: 3
   retries: 100
 
-- name: create tower inventory source
+- name: create aap inventory source
   awx.awx.tower_inventory_source:
     name: aws-windows-demo-source
     description: aws-windows-demo-source

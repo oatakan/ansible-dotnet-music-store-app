@@ -6,25 +6,18 @@
     - role: ec2_elb_remove
       ignore_errors: yes
 
-- name: Remove Windows instances
-  hosts: tag_app_music_store_demo
+- name: Remove Windows Instances
+  hosts: all
+  gather_facts: False
+  connection: local
+  vars:
+    ansible_ssh_password: ''
   become: no
-  gather_facts: no
-  tasks:
-    - name: get ec2 instance information
-      ec2_instance_info:
-        region: "{{ ec2_region }}"
-        filters:
-          vpc-id: "{{ ec2_vpc_id }}"
-          "tag:app": music_store_demo
-      register: ec2_instances
-      delegate_to: localhost
-      run_once: yes
+  vars_files:
+    - node-config/nodes-ec2.yml
 
-    - name: terminate instances
-      ec2:
-        region: "{{ ec2_region }}"
-        state: "absent"
-        instance_ids: "{{ ec2_instances.instances | map(attribute='instance_id') | list }}"
+  roles:
+    - role: ansible-role-ec2
+      role_action: deprovision
       delegate_to: localhost
       run_once: yes
