@@ -24,13 +24,19 @@
         - xNetworking
         - cChoco
 
+- block:
+    - name: Install Chocolatey
+      win_dsc:
+        resource_name: cChocoInstaller
+        InstallDir: 'c:\choco'
+  rescue:
     - name: Reboot system
       ansible.windows.win_reboot:
 
-- name: Install Chocolatey
-  win_dsc:
-    resource_name: cChocoInstaller
-    InstallDir: 'c:\choco'
+    - name: Install Chocolatey (retry)
+      win_dsc:
+        resource_name: cChocoInstaller
+        InstallDir: 'c:\choco'
 
 - name: Install dotnetcore-sdk
   win_dsc:
