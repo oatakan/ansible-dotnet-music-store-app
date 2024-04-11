@@ -24,10 +24,15 @@
         - xNetworking
         - cChoco
 
-- name: Install Chocolatey
-  win_dsc:
-    resource_name: cChocoInstaller
-    InstallDir: 'c:\choco'
+- block:
+    - name: Install Chocolatey
+      win_dsc:
+        resource_name: cChocoInstaller
+        InstallDir: 'c:\choco'
+  rescue:
+    - name: Ensure Chocolatey is installed
+      win_chocolatey:
+        name: chocolatey
 
 - name: Install dotnetcore-sdk
   win_dsc:
