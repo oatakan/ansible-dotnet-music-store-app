@@ -33,8 +33,8 @@ nodes:
       timezone: 20
       password: '{{ ansible_password | default(ansible_ssh_password) }}'
       runonce:
-      - c:\windows\system32\windowspowershell\v1.0\powershell.exe -command "& $([scriptblock]::Create((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1'))) -ForceNewSSLCert -EnableCredSSP"
-      - winrm set winrm/config/service/auth @{CredSSP="true"}
+        - powershell.exe -command "Invoke-WebRequest -Uri https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile C:\ConfigureRemotingForAnsible.ps1"
+        - powershell.exe -ExecutionPolicy Unrestricted -File C:\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
   - name: winweb1
     role: iis
     app_name: music_store_demo
