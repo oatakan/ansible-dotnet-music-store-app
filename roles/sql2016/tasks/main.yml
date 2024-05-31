@@ -2,7 +2,7 @@
 
 - block:
     - name: Install required DSC modules
-      win_psmodule:
+      community.windows.win_psmodule:
         name: "{{ item }}"
         state: present
       loop:
@@ -15,7 +15,7 @@
         Install-Module -Name 'PowerShellGet' -Repository 'PSGallery' -Scope 'AllUsers' -AllowClobber -Force -Confirm:$false
 
     - name: Install required DSC modules
-      win_psmodule:
+      community.windows.win_psmodule:
         name: "{{ item }}"
         state: present
       loop:
